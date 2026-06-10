@@ -1,0 +1,318 @@
+@import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+
+/* ── Self-hosted Inter ────────────────────────────────────────────── */
+@font-face {
+	font-family: 'Inter';
+	src: url('/fonts/InterVariable.woff2') format('woff2-variations');
+	font-weight: 100 900;
+	font-display: swap;
+	font-style: normal;
+}
+
+/* ── Self-hosted Instrument Serif ───────────────────────────────── */
+@font-face {
+	font-family: 'Instrument Serif';
+	src: url('/fonts/InstrumentSerif-Regular.woff2') format('woff2');
+	font-weight: 400;
+	font-display: swap;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Instrument Serif';
+	src: url('/fonts/InstrumentSerif-Italic.woff2') format('woff2');
+	font-weight: 400;
+	font-display: swap;
+	font-style: italic;
+}
+
+/* ── Design Tokens ──────────────────────────────────────────────── */
+@theme {
+	/* Fonts */
+	--font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+	--font-serif: 'Instrument Serif', ui-serif, Georgia, serif;
+	--font-mono: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+	/* Color palette */
+	--color-bg: #f5f4f0;
+	--color-surface: #ffffff;
+	--color-surface-hover: #fafaf8;
+	--color-border: rgba(0, 0, 0, 0.06);
+	--color-border-strong: rgba(0, 0, 0, 0.1);
+
+	--color-text-primary: #0f0f0e;
+	--color-text-secondary: #6b6b67;
+	--color-text-tertiary: #a8a8a3;
+	--color-text-inverse: #f5f4f0;
+
+	--color-accent: #0f0f0e;
+	--color-accent-hover: #6b6b67;
+
+	/* Code block specific */
+	--color-code-bg: #161614;
+	--color-code-text: #e8e5e0;
+
+	--shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.03);
+	--shadow-hover: 0 3px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+
+	/* Spacing scale (8px base) */
+	--spacing-xs: 0.25rem; /* 4px */
+	--spacing-sm: 0.5rem; /* 8px */
+	--spacing-md: 1rem; /* 16px */
+	--spacing-lg: 1.5rem; /* 24px */
+	--spacing-xl: 2rem; /* 32px */
+	--spacing-2xl: 3rem; /* 48px */
+	--spacing-3xl: 4rem; /* 64px */
+	--spacing-4xl: 6rem; /* 96px */
+
+	/* Radius */
+	--radius-sm: 0.25rem;
+	--radius-md: 0.5rem;
+	--radius-lg: 0.75rem;
+	--radius-full: 9999px;
+
+	/* Motion */
+	--duration-fast: 120ms;
+	--duration-base: 200ms;
+	--duration-slow: 300ms;
+	--ease-base: cubic-bezier(0.4, 0, 0.2, 1);
+	--ease-out: cubic-bezier(0, 0, 0.2, 1);
+
+	/* Typography scale */
+	--text-xs: 0.75rem;
+	--text-sm: 0.8125rem;
+	--text-base: 1rem;
+	--text-lg: 1.125rem;
+	--text-xl: 1.25rem;
+	--text-2xl: 1.5rem;
+	--text-3xl: 1.875rem;
+	--text-4xl: 2.25rem;
+	--text-5xl: 3rem;
+
+	/* Leading */
+	--leading-tight: 1.2;
+	--leading-snug: 1.375;
+	--leading-normal: 1.5;
+	--leading-relaxed: 1.65;
+	--leading-loose: 1.8;
+
+	/* Tracking */
+	--tracking-tight: -0.025em;
+	--tracking-normal: 0em;
+	--tracking-wide: 0.025em;
+	--tracking-wider: 0.05em;
+	--tracking-widest: 0.1em;
+}
+
+[data-theme='light'] {
+	--color-bg: #f5f4f0;
+	--color-surface: #ffffff;
+	--color-surface-hover: #fafaf8;
+	--color-border: rgba(0, 0, 0, 0.06);
+	--color-border-strong: rgba(0, 0, 0, 0.1);
+	--color-text-primary: #0f0f0e;
+	--color-text-secondary: #6b6b67;
+	--color-text-tertiary: #a8a8a3;
+	--color-text-inverse: #f5f4f0;
+	--color-accent: #0f0f0e;
+	--color-accent-hover: #6b6b67;
+	--color-code-bg: #161614;
+	--color-code-text: #e8e5e0;
+	--shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.03);
+	--shadow-hover: 0 3px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme='dark'] {
+	--color-bg: #000000;
+	--color-surface: #0b0b0b;
+	--color-surface-hover: #111111;
+	--color-border: rgba(255, 255, 255, 0.05);
+	--color-border-strong: rgba(255, 255, 255, 0.09);
+
+	--color-text-primary: #f0efeb;
+	--color-text-secondary: #8a8a85;
+	--color-text-tertiary: #555552;
+	--color-text-inverse: #000000;
+
+	--color-accent: #f0efeb;
+	--color-accent-hover: #8a8a85;
+
+	--color-code-bg: #0c0b0a;
+	--color-code-text: #ede8df;
+	--shadow-card: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+	--shadow-hover: 0 3px 14px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Base ───────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	font-family: var(--font-sans);
+	background-color: var(--color-bg);
+	color: var(--color-text-primary);
+	color-scheme: light;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+	scroll-behavior: smooth;
+}
+
+[data-theme='dark'] {
+	color-scheme: dark;
+}
+
+body {
+	margin: 0;
+	background-color: var(--color-bg);
+	color: var(--color-text-primary);
+	transition:
+		background-color var(--duration-slow) var(--ease-base),
+		color var(--duration-slow) var(--ease-base);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}
+
+/* ── Focus ──────────────────────────────────────────────────────── */
+:focus-visible {
+	outline: 2px solid var(--color-text-primary);
+	outline-offset: 3px;
+	border-radius: var(--radius-sm);
+}
+
+/* ── Selection ──────────────────────────────────────────────────── */
+::selection {
+	background-color: var(--color-text-primary);
+	color: var(--color-text-inverse);
+}
+
+/* ── Prose overrides for @tailwindcss/typography ────────────────── */
+.prose {
+	--tw-prose-body: var(--color-text-secondary);
+	--tw-prose-headings: var(--color-text-primary);
+	--tw-prose-links: var(--color-text-primary);
+	--tw-prose-bold: var(--color-text-primary);
+	--tw-prose-counters: var(--color-text-secondary);
+	--tw-prose-bullets: var(--color-text-secondary);
+	--tw-prose-hr: var(--color-border);
+	--tw-prose-quotes: var(--color-text-primary);
+	--tw-prose-quote-borders: var(--color-border-strong);
+	--tw-prose-captions: var(--color-text-tertiary);
+	--tw-prose-code: var(--color-code-text);
+	--tw-prose-pre-code: var(--color-code-text);
+	--tw-prose-pre-bg: var(--color-code-bg);
+	--tw-prose-th-borders: var(--color-border);
+	--tw-prose-td-borders: var(--color-border);
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+	font-family: var(--font-serif);
+	font-weight: 400;
+	letter-spacing: var(--tracking-tight);
+}
+
+.prose a {
+	text-decoration: underline;
+	text-underline-offset: 3px;
+	text-decoration-thickness: 1px;
+	text-decoration-color: var(--color-border-strong);
+	transition: text-decoration-color var(--duration-fast) var(--ease-base);
+}
+
+.prose a:hover {
+	text-decoration-color: var(--color-text-primary);
+}
+
+.prose h2[id='table-of-contents'] + :is(ul, ol) {
+	--tw-prose-bullets: rgba(15, 15, 14, 0.48);
+}
+
+.prose h2[id='table-of-contents'] + :is(ul, ol) a {
+	color: #2f2f2b !important;
+	text-decoration-color: rgba(15, 15, 14, 0.18) !important;
+}
+
+.prose h2[id='table-of-contents'] + :is(ul, ol) a:hover {
+	color: var(--color-text-primary) !important;
+	text-decoration-color: rgba(15, 15, 14, 0.28) !important;
+}
+
+[data-theme='dark'] .prose h2[id='table-of-contents'] + :is(ul, ol) {
+	--tw-prose-bullets: rgba(240, 239, 235, 0.56);
+}
+
+[data-theme='dark'] .prose h2[id='table-of-contents'] + :is(ul, ol) a {
+	color: #d2d0ca !important;
+	text-decoration-color: rgba(240, 239, 235, 0.24) !important;
+}
+
+[data-theme='dark'] .prose h2[id='table-of-contents'] + :is(ul, ol) a:hover {
+	color: var(--color-text-primary) !important;
+	text-decoration-color: rgba(240, 239, 235, 0.36) !important;
+}
+
+/* Code blocks from Shiki */
+.prose pre {
+	background-color: var(--color-code-bg) !important;
+	border-radius: var(--radius-lg);
+	border: 1px solid var(--color-border-strong);
+	overflow-x: auto;
+	position: relative;
+}
+
+.prose :not(pre) > code {
+	background-color: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	padding: 0.125em 0.375em;
+	font-size: 0.875em;
+	color: var(--color-text-primary);
+}
+
+/* Shiki generated — remove default bg so ours wins */
+.prose pre code {
+	background: none !important;
+	border: none !important;
+	padding: 0 !important;
+	font-size: 0.875em;
+}
+
+/* Headings anchors */
+.prose h2 a,
+.prose h3 a,
+.prose h4 a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.prose h2 a:hover,
+.prose h3 a:hover {
+	text-decoration: none;
+}
+
+/* Blockquote */
+.prose blockquote {
+	font-family: var(--font-serif);
+	font-style: italic;
+	font-size: var(--text-xl);
+	border-left: 2px solid var(--color-border-strong);
+	color: var(--color-text-secondary);
+}

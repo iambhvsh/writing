@@ -1,0 +1,91 @@
+---
+title: Introducing Writing
+description: A first note on this space, why it exists, and the system behind it.
+tags:
+  - writing
+  - design
+  - engineering
+---
+
+## Table of Contents
+
+## A place to think
+
+Writing has always been the clearest way for me to understand what I am making.
+
+This site exists for that reason. It is a personal space for essays, notes, and ideas on design, engineering, and craft. A place to slow things down, give thoughts a proper shape, and return to them with more care than a feed usually allows.
+
+I wanted something focused. Not large. Not loud. Just a writing surface that feels deliberate from the first line to the last.
+
+## Why now
+
+I have wanted a dedicated writing space for a while.
+
+The more I work across design and engineering, the more I notice how often the important parts live between the two. The interface decision that changes the code. The technical constraint that improves the design. The small system choice that makes future work easier.
+
+Those ideas need room.
+
+This site is where I want to keep them.
+
+## How it is made
+
+The site is built with SvelteKit and SVX.
+
+Each essay lives in its own folder:
+
+```text
+writings/
+  introducing-writing/
+    index.svx
+```
+
+If an essay needs an image, diagram, or supporting file, it can live beside the writing:
+
+```text
+writings/my-essay/
+  index.svx
+  cover.webp
+  diagram.png
+```
+
+The folder becomes the URL. The source stays simple. The public path stays clean.
+
+SVX keeps the writing close to Markdown while still allowing Svelte components when a piece needs something more considered than static text.
+
+## The stack
+
+The site uses:
+
+- SvelteKit for routing and static output
+- Svelte 5 for components
+- SVX and mdsvex for writing
+- Tailwind CSS for the visual system
+- Shiki for code highlighting
+- Pagefind for search
+- TypeScript for the application layer
+
+The result is a small static site with generated metadata, RSS, sitemap support, syntax highlighting, and search after build.
+
+There is no CMS here. The writing itself is the source.
+
+## Design as function
+
+The visual system is quiet, intentional, and text-led.
+
+That restraint is not a lack of design. It is the design. The header, spacing, search, metadata, colors, and motion all shape how the writing is read.
+
+> Design is not just what it looks like and feels like. Design is how it works.
+
+That line is the center of this site.
+
+The interface should not simply look minimal. It should make writing easier to publish, easier to read, and easier to return to. It should support attention without asking for attention.
+
+## What comes next
+
+This is the first note.
+
+More will follow as the system earns its shape through use. Some pieces will be polished essays. Some will be shorter observations. Some will be notes from building, designing, learning, and changing my mind.
+
+For now, the purpose is simple.
+
+Write clearly. Build carefully. Keep the space honest.
