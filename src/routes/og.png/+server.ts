@@ -1,4 +1,3 @@
-// @ts-expect-error - satori-html has no types
 import { html } from 'satori-html';
 import { siteConfig } from '$lib/config.js';
 import { Resvg } from '@resvg/resvg-js';
@@ -12,9 +11,9 @@ const width = 1200;
 const height = 630;
 
 export async function GET() {
-	const fontPathInter = join(process.cwd(), 'static/fonts/inter-latin-400-normal.ttf');
+	const fontPathInter = join(process.cwd(), 'static/fonts/og/inter-latin-400-normal.ttf');
 	const fontDataInter = await fs.readFile(fontPathInter);
-	const fontPathSerif = join(process.cwd(), 'static/fonts/InstrumentSerif-Regular.ttf');
+	const fontPathSerif = join(process.cwd(), 'static/fonts/og/InstrumentSerif-Regular.ttf');
 	const fontDataSerif = await fs.readFile(fontPathSerif);
 
 	const markup = html`
