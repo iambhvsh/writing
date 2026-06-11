@@ -3,6 +3,8 @@ import { html } from 'satori-html';
 import { siteConfig } from '$lib/config.js';
 import { Resvg } from '@resvg/resvg-js';
 import satori from 'satori';
+import fs from 'node:fs/promises';
+import { join } from 'node:path';
 
 export const prerender = true;
 
@@ -10,23 +12,34 @@ const width = 1200;
 const height = 630;
 
 export async function GET() {
-	const fontData = Buffer.from(
-		await (
-			await fetch(
-				'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfMZhrib2Bg-4.ttf'
-			)
-		).arrayBuffer()
-	);
+	const fontPathInter = join(process.cwd(), 'static/fonts/inter-latin-400-normal.ttf');
+	const fontDataInter = await fs.readFile(fontPathInter);
+	const fontPathSerif = join(process.cwd(), 'static/fonts/InstrumentSerif-Regular.ttf');
+	const fontDataSerif = await fs.readFile(fontPathSerif);
 
 	const markup = html`
-		<div style="background-color: #ffffff; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 80px; font-family: 'Inter';">
-			<div style="display: flex; flex-direction: column; width: 100%; height: 100%; border: 1px solid #eaeaea; border-radius: 24px; padding: 60px; background-color: #fafafa; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
-				<div style="display: flex; flex-direction: column; flex: 1; justify-content: center;">
-					<h1 style="font-size: 84px; font-weight: 600; color: #111; line-height: 1.1; margin: 0 0 24px 0; letter-spacing: -2px;">${siteConfig.title}</h1>
-					<p style="font-size: 36px; font-weight: 400; color: #666; margin: 0; line-height: 1.4; max-width: 800px;">${siteConfig.description}</p>
-				</div>
-				<div style="display: flex; align-items: center; margin-top: auto;">
-					<div style="display: flex; font-size: 24px; font-weight: 600; color: #111; letter-spacing: -0.5px;">writing.iambhvsh.in</div>
+		<div
+			style="background-color: #ffffff; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 100px; font-family: 'Inter';"
+		>
+			<div style="display: flex; flex-direction: column; flex: 1; justify-content: center;">
+				<h1
+					style="font-family: 'Instrument Serif'; font-size: 110px; font-weight: 400; color: #111; line-height: 1; margin: 0 0 32px 0; letter-spacing: -2px;"
+				>
+					${siteConfig.title}
+				</h1>
+				<p
+					style="font-size: 40px; font-weight: 400; color: #666; margin: 0; line-height: 1.4; max-width: 900px;"
+				>
+					${siteConfig.description}
+				</p>
+			</div>
+			<div
+				style="display: flex; align-items: center; justify-content: flex-start; margin-top: auto;"
+			>
+				<div
+					style="display: flex; font-size: 28px; font-weight: 400; color: #333; letter-spacing: -0.5px;"
+				>
+					writing.iambhvsh.in
 				</div>
 			</div>
 		</div>
@@ -38,16 +51,16 @@ export async function GET() {
 		fonts: [
 			{
 				name: 'Inter',
-				data: fontData,
+				data: fontDataInter,
 				weight: 400,
 				style: 'normal',
 			},
 			{
-				name: 'Inter',
-				data: fontData,
-				weight: 600,
+				name: 'Instrument Serif',
+				data: fontDataSerif,
+				weight: 400,
 				style: 'normal',
-			}
+			},
 		],
 	});
 
