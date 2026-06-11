@@ -26,6 +26,7 @@
 </script>
 
 <header>
+	<div class="header-bg"></div>
 	<div class="header-inner">
 		<a href="/" class="wordmark" aria-label="{siteConfig.title} — home">
 			{siteConfig.title}
@@ -54,10 +55,15 @@
 		position: sticky;
 		top: 0;
 		z-index: 50;
+		border-bottom: 1px solid var(--color-border);
+	}
+	.header-bg {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
 		background-color: color-mix(in srgb, var(--color-bg) 72%, transparent);
 		backdrop-filter: blur(20px) saturate(1.08);
 		-webkit-backdrop-filter: blur(20px) saturate(1.08);
-		border-bottom: 1px solid var(--color-border);
 	}
 	.header-inner {
 		max-width: 72rem;

@@ -56,7 +56,8 @@ const config = {
 				// Ignore missing og.png placeholder (user will add their own)
 				if (path === '/og.png') return;
 				throw new Error(message);
-			}
+			},
+			entries: ['*', '/og.png']
 		}
 	}
 };

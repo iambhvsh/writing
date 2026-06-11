@@ -4,7 +4,7 @@
 /* ── Self-hosted Inter ────────────────────────────────────────────── */
 @font-face {
 	font-family: 'Inter';
-	src: url('/fonts/InterVariable.woff2') format('woff2-variations');
+	src: url('/fonts/web/InterVariable.woff2') format('woff2-variations');
 	font-weight: 100 900;
 	font-display: swap;
 	font-style: normal;
@@ -13,7 +13,7 @@
 /* ── Self-hosted Instrument Serif ───────────────────────────────── */
 @font-face {
 	font-family: 'Instrument Serif';
-	src: url('/fonts/InstrumentSerif-Regular.woff2') format('woff2');
+	src: url('/fonts/web/InstrumentSerif-Regular.woff2') format('woff2');
 	font-weight: 400;
 	font-display: swap;
 	font-style: normal;
@@ -21,7 +21,7 @@
 
 @font-face {
 	font-family: 'Instrument Serif';
-	src: url('/fonts/InstrumentSerif-Italic.woff2') format('woff2');
+	src: url('/fonts/web/InstrumentSerif-Italic.woff2') format('woff2');
 	font-weight: 400;
 	font-display: swap;
 	font-style: italic;
@@ -42,8 +42,8 @@
 	--color-border-strong: rgba(0, 0, 0, 0.1);
 
 	--color-text-primary: #0f0f0e;
-	--color-text-secondary: #6b6b67;
-	--color-text-tertiary: #a8a8a3;
+	--color-text-secondary: #555552;
+	--color-text-tertiary: #747470;
 	--color-text-inverse: #f5f4f0;
 
 	--color-accent: #0f0f0e;
@@ -112,8 +112,8 @@
 	--color-border: rgba(0, 0, 0, 0.06);
 	--color-border-strong: rgba(0, 0, 0, 0.1);
 	--color-text-primary: #0f0f0e;
-	--color-text-secondary: #6b6b67;
-	--color-text-tertiary: #a8a8a3;
+	--color-text-secondary: #555552;
+	--color-text-tertiary: #747470;
 	--color-text-inverse: #f5f4f0;
 	--color-accent: #0f0f0e;
 	--color-accent-hover: #6b6b67;
@@ -131,8 +131,8 @@
 	--color-border-strong: rgba(255, 255, 255, 0.09);
 
 	--color-text-primary: #f0efeb;
-	--color-text-secondary: #8a8a85;
-	--color-text-tertiary: #555552;
+	--color-text-secondary: #b5b5b1;
+	--color-text-tertiary: #8a8a85;
 	--color-text-inverse: #000000;
 
 	--color-accent: #f0efeb;
@@ -168,7 +168,7 @@ html {
 
 body {
 	margin: 0;
-	background-color: var(--color-bg);
+	background-color: transparent;
 	color: var(--color-text-primary);
 	transition:
 		background-color var(--duration-slow) var(--ease-base),
