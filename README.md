@@ -1,4 +1,4 @@
-# Bhavesh Patil Writing
+# Bhavesh Patil - Writing
 
 A personal writing site for essays, notes, and ideas on design, engineering, and craft.
 
