@@ -45,7 +45,7 @@ export function buildSeo(options: {
 	const pageDesc = description ?? siteConfig.description;
 	const canonical = `${siteConfig.url}${path}`;
 	const fallbackImage = siteConfig.ogImage ?? '/og.png';
-	const imagePath = post?.cover ?? fallbackImage;
+	const imagePath = post ? (post.cover ?? `${path}/og.png`) : fallbackImage;
 	const ogImage = imagePath.startsWith('http') ? imagePath : `${siteConfig.url}${imagePath}`;
 
 	const og: OgMeta = {
