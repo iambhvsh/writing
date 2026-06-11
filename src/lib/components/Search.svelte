@@ -19,6 +19,8 @@
 	let results = $state<SearchResultView[]>([]);
 	let loading = $state(false);
 	let pagefind = $state<Pagefind | null>(null);
+	let pagefindReady = $state(dev);
+	let pagefindLoadPromise: Promise<Pagefind | null> | null = null;
 	let open = $state(false);
 	let reducedMotion = $state(false);
 
@@ -27,21 +29,32 @@
 		easing: (t: number) => 1 - Math.pow(1 - t, 3),
 	});
 
-	onMount(async () => {
+	onMount(() => {
 		reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-		if (dev) return;
-
-		try {
-			const pagefindPath = new URL('/pagefind/pagefind.js', window.location.origin).pathname;
-			const pf = (await import(/* @vite-ignore */ pagefindPath)) as Pagefind;
-			await pf.options?.({ basePath: '/pagefind/', excerptLength: 50, noWorker: true });
-			await pf.init?.();
-			pagefind = pf;
-		} catch {
-			pagefind = null;
-		}
 	});
+
+	async function loadPagefind() {
+		if (dev) return null;
+		if (pagefind) return pagefind;
+		if (!pagefindLoadPromise) {
+			pagefindReady = false;
+			pagefindLoadPromise = (async () => {
+				try {
+					const pagefindPath = new URL('/pagefind/pagefind.js', window.location.origin).pathname;
+					const pf = (await import(/* @vite-ignore */ pagefindPath)) as Pagefind;
+					await pf.options?.({ basePath: '/pagefind/', excerptLength: 50 });
+					await pf.init?.();
+					return pf;
+				} catch {
+					return null;
+				}
+			})();
+		}
+
+		pagefind = await pagefindLoadPromise;
+		pagefindReady = true;
+		return pagefind;
+	}
 
 	$effect(() => {
 		if (typeof document === 'undefined') return;
@@ -60,14 +73,22 @@
 	});
 
 	async function search() {
-		if (!pagefind || query.trim().length < 2) {
+		if (query.trim().length < 2) {
 			results = [];
 			return;
 		}
+
 		loading = true;
-		const response = pagefind.debouncedSearch
-			? await pagefind.debouncedSearch(query, {}, 160)
-			: await pagefind.search(query);
+		const pf = await loadPagefind();
+		if (!pf) {
+			loading = false;
+			results = [];
+			return;
+		}
+
+		const response = pf.debouncedSearch
+			? await pf.debouncedSearch(query, {}, 160)
+			: await pf.search(query);
 		if (!response) {
 			loading = false;
 			return;
@@ -96,7 +117,13 @@
 		if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
 			e.preventDefault();
 			open = !open;
+			if (open) void loadPagefind();
 		}
+	}
+
+	function toggleSearch() {
+		open = !open;
+		if (open) void loadPagefind();
 	}
 </script>
 
@@ -108,7 +135,7 @@
 		class="search-trigger"
 		onclick={(e) => {
 			e.preventDefault();
-			open = !open;
+			toggleSearch();
 		}}
 		aria-label="Search posts (⌘K)"
 		aria-expanded={open}
@@ -140,12 +167,15 @@
 			<div class="search-input-wrap">
 				<SearchIcon size={17} strokeWidth={1.8} />
 				<input
+					id="site-search"
+					name="q"
 					type="search"
 					class="search-input"
 					placeholder="Search writing"
 					bind:value={query}
 					oninput={search}
 					use:focusOnMount
+					autocomplete="off"
 					aria-label="Search writing"
 				/>
 				{#if loading}<span class="search-loading" aria-live="polite" aria-busy="true">…</span>{/if}
@@ -179,8 +209,10 @@
 						</li>
 					{/each}
 				</ul>
+			{:else if !pagefindReady}
+				<p class="search-empty">Loading search…</p>
 			{:else if !pagefind}
-				<p class="search-empty">Search available after build.</p>
+				<p class="search-empty">Search unavailable.</p>
 			{:else if query.length > 1 && !loading}
 				<p class="search-empty">No results for "{query}"</p>
 			{/if}

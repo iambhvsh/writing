@@ -54,6 +54,29 @@ const highlighter = await createHighlighter({
 	]
 });
 
+function remarkTableOfContentsHeading() {
+	return (tree) => {
+		const isTocHeading = (node) =>
+			node.type === 'heading' &&
+			node.depth === 2 &&
+			node.children.some(
+				(child) => child.type === 'text' && child.value.toLowerCase() === 'table of contents'
+			);
+
+		tree.children = tree.children.filter((node, index, children) => {
+			if (isTocHeading(node)) return false;
+			if (node.type === 'list' && index > 0 && isTocHeading(children[index - 1])) return false;
+			return true;
+		});
+
+		tree.children.unshift({
+			type: 'heading',
+			depth: 2,
+			children: [{ type: 'text', value: 'Table of Contents' }]
+		});
+	};
+}
+
 /** @type {import('mdsvex').MdsvexOptions} */
 const mdsvexOptions = {
 	extensions: ['.svx', '.md'],
@@ -63,7 +86,7 @@ const mdsvexOptions = {
 			return `{@html \`${html}\`}`;
 		}
 	},
-	remarkPlugins: [[remarkToc, { tight: true, ordered: false }]],
+	remarkPlugins: [remarkTableOfContentsHeading, [remarkToc, { tight: true, ordered: false }]],
 	rehypePlugins: [rehypeUnwrapImages, rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }]]
 };
 
@@ -75,7 +98,6 @@ const config = {
 		adapter: adapter({
 			pages: 'build',
 			assets: 'build',
-			fallback: '404.html',
 			precompress: false,
 			strict: false
 		}),

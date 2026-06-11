@@ -5,8 +5,6 @@ publishedAt: 2026-06-10
 tags: writing, design, engineering
 ---
 
-## Table of Contents
-
 ## A place to think
 
 Writing has always been the clearest way for me to understand what I am making.

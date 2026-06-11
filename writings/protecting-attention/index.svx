@@ -1,0 +1,156 @@
+---
+title: Protecting Attention
+description: Notes on keeping enough quiet in the day to notice better ideas before they disappear.
+publishedAt: 2026-06-11
+tags: attention, craft, work
+---
+
+## The expensive thing
+
+Attention is the most expensive part of the work.
+
+Not time. Not tools. Not the number of windows open on a screen.
+
+Attention.
+
+It is the part that lets a rough interface begin to make sense. It is the part that notices when a sentence is almost right but still carrying too much weight. It is the part that can sit with a strange bug long enough to stop treating it like noise and start seeing its shape.
+
+Most of the work I care about asks for that kind of attention.
+
+And most of the day tries to take it away.
+
+## The first hour
+
+The first hour matters more than I want it to.
+
+If I begin the day by reacting, the day usually keeps that shape. Messages become the map. Small requests become the weather. I can still get things done, but the work starts to feel borrowed from everyone else's priorities.
+
+So I try to keep the first hour plain.
+
+No dashboard tour. No inbox archaeology. No pretending that checking five tools is the same as understanding the day.
+
+Just one surface. One task. One decision that would make the rest of the day easier.
+
+That sounds small, but it changes the texture of the work.
+
+## A slower kind of progress
+
+Some progress looks unproductive from the outside.
+
+Reading the same paragraph three times.
+
+Renaming a thing until it stops lying.
+
+Moving one button and then moving it back.
+
+Deleting a clever solution because the simpler one finally became visible.
+
+These are not delays. They are part of the work. They are how the work becomes less accidental.
+
+The mistake is treating attention as something that only matters during execution. It matters before execution. It matters while choosing what not to do. It matters when deciding whether a problem is asking for code, design, writing, or nothing yet.
+
+The best work often begins as a refusal to rush the wrong version of the answer.
+
+## Noise with a professional face
+
+Not all noise looks like noise.
+
+Some of it looks useful.
+
+A new framework announcement. A thread about process. A tool that promises cleaner thinking. A metric that asks to be improved because it is visible. A meeting that exists because the calendar had room for it.
+
+The difficult part is that some of these things are genuinely useful.
+
+That is what makes them dangerous.
+
+The question is not whether something is good. The question is whether it belongs inside this moment.
+
+I have lost more time to useful distractions than useless ones.
+
+## Small boundaries
+
+Large systems for attention rarely last for me.
+
+I do better with small boundaries.
+
+- write the first note before opening chat
+- keep one scratch file for messy thinking
+- close the preview when the problem is conceptual
+- open the preview when the problem is visual
+- leave a short note at the end of the day for tomorrow
+
+None of this is dramatic.
+
+That is why it works.
+
+A boundary does not need to become an identity. It just needs to reduce the number of small negotiations that happen before real work starts.
+
+## Design needs silence
+
+Design is often treated as a visible act.
+
+Screens. Components. Grids. Motion. Type. Color.
+
+But a lot of design happens before anything visible changes. It happens when you notice that a label is doing the wrong job. It happens when you realize the empty state is not empty at all, because it is carrying the user's uncertainty. It happens when the page is technically complete but emotionally too loud.
+
+Those observations need silence.
+
+Not perfect silence. Not some precious studio fantasy.
+
+Just enough space for the thing in front of you to become specific.
+
+## Code needs it too
+
+Code also punishes scattered attention.
+
+A bug can look like five different problems when the mind is moving too quickly. A type error can seem annoying when it is actually explaining a broken assumption. A refactor can feel urgent when the real issue is that the boundary was never named clearly.
+
+The work improves when I slow down enough to ask:
+
+What is this code trying to protect?
+
+What does this abstraction make easier?
+
+What does it make harder?
+
+What would I need to understand if I came back here in six months?
+
+Those questions do not take long.
+
+Avoiding them does.
+
+## The room after finishing
+
+Finishing a task creates a strange little opening.
+
+There is a temptation to fill it immediately. Start the next thing. Check the queue. Answer something. Prove the day is still moving.
+
+I am trying to leave a little room after finishing.
+
+A minute is enough.
+
+What changed? What did I learn? What should be easier next time? Did the work actually solve the problem, or did it only produce motion?
+
+That pause keeps the day from becoming a blur of completed fragments.
+
+It lets the work teach me something before I move on.
+
+## What I want to keep
+
+I do not want a perfectly optimized life.
+
+I do not want every hour turned into a unit.
+
+I want enough quiet to do work I can recognize as mine.
+
+Enough attention to notice when something is off.
+
+Enough patience to let a better version of the idea arrive.
+
+Enough discipline to protect the small conditions that make craft possible.
+
+That is the practice.
+
+Not a grand system.
+
+Just returning, again and again, to the expensive thing.

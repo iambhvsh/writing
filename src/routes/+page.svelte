@@ -12,6 +12,8 @@
 	const seo = $derived(
 		buildSeo({ path: '/', seoTitle: 'Bhavesh Patil – Writing', origin: data.origin })
 	);
+
+	const avatarUrl = 'https://db.iambhvsh.in/assets/profile.webp';
 </script>
 
 <Seo {seo} />
@@ -20,10 +22,13 @@
 	<section class="hero" aria-labelledby="hero-heading">
 		<img
 			class="hero-avatar"
-			src="https://db.iambhvsh.in/assets/profile.webp"
+			src={`${avatarUrl}?width=88&height=88&fit=cover&quality=80&format=webp`}
+			srcset={`${avatarUrl}?width=88&height=88&fit=cover&quality=80&format=webp 1x, ${avatarUrl}?width=176&height=176&fit=cover&quality=80&format=webp 2x`}
 			alt="Bhavesh Patil"
 			width="88"
 			height="88"
+			fetchpriority="high"
+			decoding="async"
 		/>
 		<h1 id="hero-heading" class="hero-title">{siteConfig.title} – Writing</h1>
 		<p class="hero-bio">{siteConfig.description}</p>

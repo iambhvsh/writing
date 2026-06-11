@@ -23,6 +23,7 @@
 	);
 
 	const PostContent = $derived(data.component as Component);
+	const avatarUrl = 'https://db.iambhvsh.in/assets/profile.webp';
 </script>
 
 <Seo {seo} />
@@ -60,11 +61,14 @@
 
 			<div class="post-author">
 				<img
-					src="https://db.iambhvsh.in/assets/profile.webp"
+					src={`${avatarUrl}?width=40&height=40&fit=cover&quality=80&format=webp`}
+					srcset={`${avatarUrl}?width=40&height=40&fit=cover&quality=80&format=webp 1x, ${avatarUrl}?width=80&height=80&fit=cover&quality=80&format=webp 2x`}
 					alt=""
 					width="40"
 					height="40"
 					class="author-avatar"
+					loading="lazy"
+					decoding="async"
 				/>
 				<span class="author-name">{siteConfig.author}</span>
 			</div>

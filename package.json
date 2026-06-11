@@ -5,9 +5,9 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build && pnpm exec pagefind --site build && node -e \"const fs=require('node:fs'); if (fs.existsSync('build/pagefind')) fs.cpSync('build/pagefind', '.svelte-kit/output/client/pagefind', { recursive: true });\"",
+		"build": "vite build && pagefind --site build",
 		"build:no-search": "vite build",
-		"preview": "vite preview",
+		"preview": "vite preview --outDir build",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
