@@ -153,7 +153,7 @@
 
 html {
 	font-family: var(--font-sans);
-	background-color: var(--color-bg);
+	background: var(--color-bg);
 	color: var(--color-text-primary);
 	color-scheme: light;
 	-webkit-font-smoothing: antialiased;
@@ -168,7 +168,7 @@ html {
 
 body {
 	margin: 0;
-	background-color: var(--color-bg);
+	background: var(--color-bg);
 	color: var(--color-text-primary);
 	transition:
 		background-color var(--duration-slow) var(--ease-base),

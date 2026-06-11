@@ -17,6 +17,7 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
+		"@resvg/resvg-js": "^2.6.2",
 		"@sveltejs/adapter-static": "^3.0.10",
 		"@sveltejs/kit": "^2.57.0",
 		"@sveltejs/vite-plugin-svelte": "^7.0.0",
@@ -27,6 +28,7 @@
 		"pagefind": "^1.5.2",
 		"prettier": "^3.8.4",
 		"prettier-plugin-svelte": "^4.1.0",
+		"satori": "^0.26.0",
 		"svelte": "^5.55.2",
 		"svelte-check": "^4.4.6",
 		"typescript": "^6.0.2",

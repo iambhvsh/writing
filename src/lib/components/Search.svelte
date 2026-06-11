@@ -281,7 +281,7 @@
 	.search-backdrop {
 		position: fixed;
 		inset: 0;
-		background: color-mix(in srgb, var(--color-bg) 42%, transparent);
+		background-color: color-mix(in srgb, var(--color-bg) 42%, transparent);
 		backdrop-filter: blur(18px) saturate(1.08);
 		-webkit-backdrop-filter: blur(18px) saturate(1.08);
 		z-index: 90;
@@ -296,7 +296,7 @@
 		display: flex;
 		flex-direction: column;
 		overscroll-behavior: contain;
-		background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+		background-color: color-mix(in srgb, var(--color-surface) 88%, transparent);
 		backdrop-filter: blur(22px) saturate(1.08);
 		-webkit-backdrop-filter: blur(22px) saturate(1.08);
 		border: 1px solid var(--color-border);
