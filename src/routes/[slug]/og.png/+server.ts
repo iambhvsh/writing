@@ -1,22 +1,16 @@
 import { html } from 'satori-html';
-import { Resvg } from '@resvg/resvg-js';
-import satori from 'satori';
-import fs from 'node:fs/promises';
-import { join } from 'node:path';
-import { getPost, getAllPosts } from '$lib/content.js';
+import { getAllPosts, getPost } from '$lib/content.js';
 import { error } from '@sveltejs/kit';
 import { formatDate } from '$lib/utils.js';
-import type { RequestHandler, EntryGenerator } from './$types.js';
+import { getOgFonts, renderOgImage } from '$lib/og.js';
+import type { EntryGenerator, RequestHandler } from './$types.js';
 
 export const prerender = true;
 
 export const entries: EntryGenerator = async () => {
 	const posts = await getAllPosts();
-	return posts.map((post) => ({ slug: post.slug }));
+	return posts.filter((post) => !post.cover).map((post) => ({ slug: post.slug }));
 };
-
-const width = 1200;
-const height = 630;
 
 export const GET: RequestHandler = async ({ params }) => {
 	const result = await getPost(params.slug);
@@ -25,16 +19,11 @@ export const GET: RequestHandler = async ({ params }) => {
 	}
 
 	const post = result.post;
-	const date = formatDate(post.publishedAt);
+	if (post.cover) {
+		error(404, 'Cover image is used for this post');
+	}
 
-	const fontPathInter = join(process.cwd(), 'static/fonts/og/inter-latin-400-normal.ttf');
-	const fontDataInter = await fs.readFile(fontPathInter);
-	const fontPathInter500 = join(process.cwd(), 'static/fonts/og/inter-latin-500-normal.ttf');
-	const fontDataInter500 = await fs.readFile(fontPathInter500);
-	const fontPathInter600 = join(process.cwd(), 'static/fonts/og/inter-latin-600-normal.ttf');
-	const fontDataInter600 = await fs.readFile(fontPathInter600);
-	const fontPathSerif = join(process.cwd(), 'static/fonts/og/InstrumentSerif-Regular.ttf');
-	const fontDataSerif = await fs.readFile(fontPathSerif);
+	const date = formatDate(post.publishedAt);
 
 	const markup = html`
 		<div
@@ -47,7 +36,7 @@ export const GET: RequestHandler = async ({ params }) => {
 					${date}
 				</div>
 				<h1
-					style="font-family: 'Instrument Serif'; font-size: 100px; font-weight: 400; color: #111; line-height: 1.1; margin: 0 0 32px 0; letter-spacing: -2px;"
+					style="font-family: 'Instrument Serif'; font-size: 100px; font-weight: 400; color: #111; line-height: 1.1; margin: 0 0 32px 0; letter-spacing: 0;"
 				>
 					${post.title}
 				</h1>
@@ -59,7 +48,7 @@ export const GET: RequestHandler = async ({ params }) => {
 			</div>
 			<div style="display: flex; align-items: center; margin-top: auto;">
 				<div
-					style="display: flex; font-size: 28px; font-weight: 400; color: #333; letter-spacing: -0.5px;"
+					style="display: flex; font-size: 28px; font-weight: 400; color: #333; letter-spacing: 0;"
 				>
 					Bhavesh Patil
 				</div>
@@ -67,46 +56,9 @@ export const GET: RequestHandler = async ({ params }) => {
 		</div>
 	`;
 
-	const svg = await satori(markup, {
-		width,
-		height,
-		fonts: [
-			{
-				name: 'Inter',
-				data: fontDataInter,
-				weight: 400,
-				style: 'normal',
-			},
-			{
-				name: 'Inter',
-				data: fontDataInter500,
-				weight: 500,
-				style: 'normal',
-			},
-			{
-				name: 'Inter',
-				data: fontDataInter600,
-				weight: 600,
-				style: 'normal',
-			},
-			{
-				name: 'Instrument Serif',
-				data: fontDataSerif,
-				weight: 400,
-				style: 'normal',
-			},
-		],
-	});
+	const pngData = await renderOgImage(markup, await getOgFonts([400, 500, 600]));
 
-	const resvg = new Resvg(svg, {
-		fitTo: {
-			mode: 'width',
-			value: width,
-		},
-	});
-	const pngData = resvg.render().asPng();
-
-	return new Response(pngData as unknown as BodyInit, {
+	return new Response(pngData, {
 		headers: {
 			'Content-Type': 'image/png',
 			'Cache-Control': 'public, max-age=31536000, immutable',

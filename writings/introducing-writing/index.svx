@@ -1,10 +1,8 @@
 ---
 title: Introducing Writing
 description: A first note on this space, why it exists, and the system behind it.
-tags:
-  - writing
-  - design
-  - engineering
+publishedAt: 2026-06-10
+tags: writing, design, engineering
 ---
 
 ## Table of Contents

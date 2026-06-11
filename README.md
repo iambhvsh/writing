@@ -1,150 +1,113 @@
-# Bhavesh Patil - Writing
+# Bhavesh Patil – Writing
 
-A personal writing site for essays, notes, and ideas on design, engineering, and craft.
+Personal writing site for essays, notes, and ideas on design, engineering, and craft.
 
-Designed to be focused, fast, and precise. The reading experience is shaped with the same care as the writing itself.
-
-## Overview
-
-This repository powers `writing.iambhvsh.in`.
-
-The site is built with SvelteKit and SVX, with a structure made for writing, editing, and publishing personal essays with clarity.
-
-## Content Structure
-
-Writing lives in `writings/`.
-
-Each piece has its own folder:
-
-```text
-writings/
-  introducing-writing/
-    index.svx
-```
-
-Supporting assets can live beside the essay they support:
-
-```text
-writings/my-essay/
-  index.svx
-  cover.webp
-  diagram.png
-```
-
-The folder name becomes the public URL.
-
-```text
-writings/my-essay/index.svx
-```
-
-becomes:
-
-```text
-/my-essay
-```
-
-## Frontmatter
-
-Each essay begins with frontmatter:
-
-```md
----
-title: My Essay
-description: A short description for previews and metadata.
-tags:
-  - design
-  - engineering
----
-```
-
-Optional fields:
-
-```md
-cover: ./cover.webp
-coverAlt: Description of the cover image
-```
-
-The published date is generated from the writing file.
-
-## Design
-
-The design system is quiet, intentional, and text-led.
-
-Typography, spacing, color, search, navigation, and metadata are treated as part of the writing experience. The goal is not decoration. The goal is clarity.
-
-Detailed design notes live in `DESIGN_SYSTEM.md`.
-
-## Metadata
-
-The site generates page metadata from the same source as the rendered content.
-
-Each essay includes:
-
-- document title
-- description
-- canonical URL
-- Open Graph metadata
-- Twitter card metadata
-- JSON-LD
-
-RSS and sitemap entries are generated automatically.
-
-## Search
-
-Search is powered by Pagefind and generated during the production build.
-
-## Commands
-
-Install dependencies:
-
-```sh
-pnpm install
-```
-
-Start development:
-
-```sh
-pnpm dev
-```
-
-Run project checks:
-
-```sh
-pnpm check
-```
-
-Run lint:
-
-```sh
-pnpm lint
-```
-
-Build:
-
-```sh
-pnpm build
-```
-
-Preview:
-
-```sh
-pnpm preview
-```
+For detailed design, routing, metadata, accessibility, and implementation notes, see
+[DESIGN.md](./DESIGN.md).
 
 ## Stack
 
 - SvelteKit
 - Svelte 5
-- SVX
-- Tailwind CSS
-- Shiki
+- SVX and mdsvex
+- Tailwind CSS 4
 - Pagefind
+- Shiki
+- Satori and Resvg for Open Graph images
 - TypeScript
+
+## Source Layout
+
+```text
+src/        application code
+static/     public assets
+writings/   post folders
+```
+
+See [DESIGN.md](./DESIGN.md) for the full route map and component-level reference.
+
+## Writing
+
+Each post lives in its own folder:
+
+```text
+writings/my-post/
+  index.svx
+```
+
+The folder name becomes the URL:
+
+```text
+/my-post
+```
+
+Required frontmatter:
+
+```md
+---
+title: My Post
+description: Short description for previews and metadata.
+publishedAt: 2026-06-10
+tags: design, engineering
+---
+```
+
+`publishedAt` uses `YYYY-MM-DD` format. Set it when the post is created.
+
+`tags` Comma-separated.
+
+Optional cover fields:
+
+```md
+cover: ./cover.png
+coverAlt: Description of the cover image
+```
+
+## Metadata
+
+Metadata is generated from the post frontmatter and site config.
+
+The app generates:
+
+- document title
+- description
+- canonical URL
+- Open Graph tags
+- Twitter card tags
+- JSON-LD
+- RSS feed
+- sitemap
+
+Post Open Graph behavior:
+
+- if a cover image exists, it is used as the social image
+- if no cover exists, `/{slug}/og.png` is generated during the build
+
+If `cover` is omitted, the loader checks for `cover.*` for e.g. .png, .jpg, .webp, in the post folder.
+
+## Search
+
+Search uses Pagefind.
+
+The production build runs Pagefind after SvelteKit builds the static site. During development, the search UI loads but Pagefind results are unavailable until a production build exists.
+
+## Commands
+
+```sh
+pnpm install
+pnpm dev
+pnpm check
+pnpm lint
+pnpm knip
+pnpm build
+pnpm preview
+```
 
 ## Deployment
 
-The site builds to static output in `build/`.
+Vercel uses:
 
-## Author
+- build command: `pnpm build`
+- output directory: `build`
 
-Bhavesh Patil
+Security headers are defined in `vercel.json`.

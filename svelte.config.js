@@ -7,14 +7,50 @@ import rehypeSlug from 'rehype-slug';
 import rehypeUnwrapImages from 'rehype-unwrap-images';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 
+const DEFAULT_SITE_URL = 'https://writing.iambhvsh.in';
+
+function normalizeOrigin(value) {
+	if (!value) return undefined;
+	const url = value.startsWith('http') ? value : `https://${value}`;
+
+	try {
+		return new URL(url).origin;
+	} catch {
+		return undefined;
+	}
+}
+
+const prerenderOrigin =
+	normalizeOrigin(process.env.PUBLIC_SITE_URL) ??
+	normalizeOrigin(process.env.VERCEL_PROJECT_PRODUCTION_URL) ??
+	normalizeOrigin(process.env.VERCEL_URL) ??
+	DEFAULT_SITE_URL;
+
 const theme = 'github-dark';
 const highlighter = await createHighlighter({
 	themes: [theme],
 	langs: [
-		'javascript', 'typescript', 'svelte', 'html', 'css',
-		'json', 'markdown', 'bash', 'shell', 'python', 'rust',
-		'go', 'java', 'cpp', 'c', 'yaml', 'toml', 'sql',
-		'diff', 'text', 'plaintext'
+		'javascript',
+		'typescript',
+		'svelte',
+		'html',
+		'css',
+		'json',
+		'markdown',
+		'bash',
+		'shell',
+		'python',
+		'rust',
+		'go',
+		'java',
+		'cpp',
+		'c',
+		'yaml',
+		'toml',
+		'sql',
+		'diff',
+		'text',
+		'plaintext'
 	]
 });
 
@@ -23,20 +59,12 @@ const mdsvexOptions = {
 	extensions: ['.svx', '.md'],
 	highlight: {
 		highlighter: async (code, lang = 'text') => {
-			const html = escapeSvelte(
-				highlighter.codeToHtml(code, { lang, theme })
-			);
+			const html = escapeSvelte(highlighter.codeToHtml(code, { lang, theme }));
 			return `{@html \`${html}\`}`;
 		}
 	},
-	remarkPlugins: [
-		[remarkToc, { tight: true, ordered: false }]
-	],
-	rehypePlugins: [
-		rehypeUnwrapImages,
-		rehypeSlug,
-		[rehypeAutolinkHeadings, { behavior: 'wrap' }]
-	]
+	remarkPlugins: [[remarkToc, { tight: true, ordered: false }]],
+	rehypePlugins: [rehypeUnwrapImages, rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }]]
 };
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -52,8 +80,8 @@ const config = {
 			strict: false
 		}),
 		prerender: {
-			handleHttpError: ({ path, referrer, message }) => {
-				// Ignore missing og.png placeholder (user will add their own)
+			origin: prerenderOrigin,
+			handleHttpError: ({ path, message }) => {
 				if (path === '/og.png') return;
 				throw new Error(message);
 			},

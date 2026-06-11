@@ -1,40 +1,14 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
 	import { onMount } from 'svelte';
+	import { fade, fly, scale } from 'svelte/transition';
 	import { Search as SearchIcon, X } from '@lucide/svelte';
-
-	interface PagefindData {
-		url: string;
-		meta: { title?: string };
-		excerpt?: string;
-		plain_excerpt?: string;
-		content?: string;
-	}
-
-	interface PagefindResult {
-		data: () => Promise<PagefindData>;
-	}
-
-	interface Pagefind {
-		search: (query: string) => Promise<{ results: PagefindResult[] }>;
-		debouncedSearch?: (
-			query: string,
-			options?: Record<string, never>,
-			timeout?: number
-		) => Promise<{ results: PagefindResult[] } | null>;
-		options?: (options: {
-			basePath?: string;
-			excerptLength?: number;
-			noWorker?: boolean;
-		}) => Promise<void>;
-		init?: () => Promise<void> | void;
-	}
-
-	interface SearchResultView {
-		url: string;
-		title: string;
-		excerpt?: string;
-	}
+	import {
+		buildSearchExcerpt,
+		normalizeResultUrl,
+		type Pagefind,
+		type SearchResultView,
+	} from '$lib/search.js';
 
 	function focusOnMount(node: HTMLElement) {
 		if (window.matchMedia('(max-width: 640px)').matches) return;
@@ -46,56 +20,16 @@
 	let loading = $state(false);
 	let pagefind = $state<Pagefind | null>(null);
 	let open = $state(false);
+	let reducedMotion = $state(false);
 
-	function escapeHtml(value: string): string {
-		return value
-			.replace(/&/g, '&amp;')
-			.replace(/</g, '&lt;')
-			.replace(/>/g, '&gt;')
-			.replace(/"/g, '&quot;')
-			.replace(/'/g, '&#39;');
-	}
-
-	function escapeRegExp(value: string): string {
-		return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-	}
-
-	function normalizeResultUrl(url: string): string {
-		return (
-			url
-				.replace(/\/index\.html(?=($|[?#]))/, '/')
-				.replace(/\.html(?=($|[?#]))/, '')
-				.replace(/\/$/, '') || '/'
-		);
-	}
-
-	function buildExcerpt(data: PagefindData, term: string): string | undefined {
-		const normalizedTerm = term.trim().replace(/\s+/g, ' ');
-		const source = data.content ?? data.plain_excerpt ?? '';
-
-		if (normalizedTerm.includes(' ') && source) {
-			const lowerSource = source.toLowerCase();
-			const lowerTerm = normalizedTerm.toLowerCase();
-			const index = lowerSource.indexOf(lowerTerm);
-
-			if (index >= 0) {
-				const start = Math.max(0, index - 72);
-				const end = Math.min(source.length, index + normalizedTerm.length + 72);
-				const prefix = start > 0 ? '...' : '';
-				const suffix = end < source.length ? '...' : '';
-				const snippet = `${prefix}${source.slice(start, end)}${suffix}`;
-				return escapeHtml(snippet).replace(
-					new RegExp(escapeRegExp(normalizedTerm), 'i'),
-					(match) => `<mark>${match}</mark>`
-				);
-			}
-		}
-
-		if (data.plain_excerpt) return escapeHtml(data.plain_excerpt);
-		return data.excerpt;
-	}
+	const searchMotion = $derived({
+		duration: reducedMotion ? 1 : 180,
+		easing: (t: number) => 1 - Math.pow(1 - t, 3),
+	});
 
 	onMount(async () => {
+		reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 		if (dev) return;
 
 		try {
@@ -105,7 +39,7 @@
 			await pf.init?.();
 			pagefind = pf;
 		} catch {
-			// Pagefind only available post-build
+			pagefind = null;
 		}
 	});
 
@@ -141,7 +75,7 @@
 
 		const data = await Promise.all(response.results.slice(0, 8).map((r) => r.data()));
 		results = data.map((item) => {
-			const excerpt = buildExcerpt(item, query);
+			const excerpt = buildSearchExcerpt(item, query);
 			const result: SearchResultView = {
 				url: normalizeResultUrl(item.url),
 				title: item.meta.title ?? 'Post',
@@ -187,12 +121,14 @@
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div
 			class="search-backdrop"
+			transition:fade={{ duration: reducedMotion ? 1 : 160 }}
 			onclick={() => {
 				open = false;
 			}}
 		></div>
 		<div
 			class="search-modal"
+			transition:scale={{ ...searchMotion, start: 0.985, opacity: 0 }}
 			role="dialog"
 			aria-label="Search"
 			aria-modal="true"
@@ -227,7 +163,7 @@
 			{#if results.length > 0}
 				<ul class="search-results" role="listbox" aria-label="Search results">
 					{#each results as result (result.url)}
-						<li role="option" aria-selected="false">
+						<li role="option" aria-selected="false" transition:fly={{ ...searchMotion, y: 8 }}>
 							<a
 								href={result.url}
 								class="search-result"
@@ -279,14 +215,18 @@
 		border-color: var(--color-border);
 	}
 	.search-backdrop {
+		--search-backdrop-filter: blur(28px) saturate(1.18);
+
 		position: fixed;
 		inset: 0;
-		background-color: color-mix(in srgb, var(--color-bg) 42%, transparent);
-		backdrop-filter: blur(18px) saturate(1.08);
-		-webkit-backdrop-filter: blur(18px) saturate(1.08);
+		background-color: color-mix(in srgb, var(--color-bg) 54%, transparent);
+		backdrop-filter: var(--search-backdrop-filter);
+		-webkit-backdrop-filter: var(--search-backdrop-filter);
 		z-index: 90;
 	}
 	.search-modal {
+		--search-modal-filter: blur(30px) saturate(1.2);
+
 		position: fixed;
 		top: min(4.5rem, 8dvh);
 		left: 50%;
@@ -296,14 +236,34 @@
 		display: flex;
 		flex-direction: column;
 		overscroll-behavior: contain;
-		background-color: color-mix(in srgb, var(--color-surface) 88%, transparent);
-		backdrop-filter: blur(22px) saturate(1.08);
-		-webkit-backdrop-filter: blur(22px) saturate(1.08);
+		background-color: color-mix(in srgb, var(--color-surface) 78%, transparent);
+		backdrop-filter: var(--search-modal-filter);
+		-webkit-backdrop-filter: var(--search-modal-filter);
 		border: 1px solid var(--color-border);
 		border-radius: var(--radius-lg);
 		box-shadow: var(--shadow-hover);
 		z-index: 100;
 		overflow: hidden;
+	}
+	@supports (backdrop-filter: blur(1px)) {
+		.search-backdrop {
+			backdrop-filter: var(--search-backdrop-filter);
+		}
+
+		.search-modal {
+			backdrop-filter: var(--search-modal-filter);
+		}
+	}
+	@supports (-webkit-backdrop-filter: blur(1px)) {
+		.search-backdrop {
+			backdrop-filter: var(--search-backdrop-filter);
+			-webkit-backdrop-filter: var(--search-backdrop-filter);
+		}
+
+		.search-modal {
+			backdrop-filter: var(--search-modal-filter);
+			-webkit-backdrop-filter: var(--search-modal-filter);
+		}
 	}
 	.search-input-wrap {
 		display: flex;

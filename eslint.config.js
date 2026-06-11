@@ -29,10 +29,9 @@ export default ts.config(
 			'@typescript-eslint/no-explicit-any': 'error',
 			'@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
 			'@typescript-eslint/consistent-type-imports': 'error',
-			// Disabled — false positives / intentional usage:
-			'svelte/no-navigation-without-resolve': 'off',   // standard <a href> in SvelteKit
-			'svelte/no-at-html-tags': 'off',                  // used only for JSON-LD + Pagefind excerpts (safe)
-			'@typescript-eslint/no-unnecessary-condition': 'off', // over-eager with optional metadata fields
+			'svelte/no-navigation-without-resolve': 'off',
+			'svelte/no-at-html-tags': 'off',
+			'@typescript-eslint/no-unnecessary-condition': 'off',
 		},
 	},
 	{

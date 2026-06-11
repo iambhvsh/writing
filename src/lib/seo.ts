@@ -32,21 +32,28 @@ interface TwitterMeta {
 	creator?: string;
 }
 
+function serializeJsonLd(value: unknown): string {
+	return JSON.stringify(value).replace(/</g, '\\u003c');
+}
+
 export function buildSeo(options: {
 	title?: string;
 	seoTitle?: string;
 	description?: string;
 	path?: string;
+	origin?: string;
 	post?: Post;
 }): SeoMeta {
-	const { title, seoTitle, description, path = '/', post } = options;
+	const { title, seoTitle, description, path = '/', origin, post } = options;
 
-	const pageTitle = seoTitle ?? (title ? `${title} — ${siteConfig.title}` : siteConfig.title);
+	const pageTitle = seoTitle ?? (title ? `${title} | ${siteConfig.title}` : siteConfig.title);
 	const pageDesc = description ?? siteConfig.description;
-	const canonical = `${siteConfig.url}${path}`;
+	const baseUrl = (origin ?? siteConfig.url).replace(/\/$/, '');
+	const pagePath = path.startsWith('/') ? path : `/${path}`;
+	const canonical = `${baseUrl}${pagePath}`;
 	const fallbackImage = siteConfig.ogImage ?? '/og.png';
-	const imagePath = post ? (post.cover ?? `${path}/og.png`) : fallbackImage;
-	const ogImage = imagePath.startsWith('http') ? imagePath : `${siteConfig.url}${imagePath}`;
+	const imagePath = post ? (post.cover ?? `${pagePath}/og.png`) : fallbackImage;
+	const ogImage = imagePath.startsWith('http') ? imagePath : `${baseUrl}${imagePath}`;
 
 	const og: OgMeta = {
 		title: pageTitle,
@@ -74,39 +81,41 @@ export function buildSeo(options: {
 		}),
 	};
 
-	const jsonLd = post
-		? JSON.stringify({
-				'@context': 'https://schema.org',
-				'@type': 'BlogPosting',
-				headline: post.title,
-				description: post.description,
-				author: {
-					'@type': 'Person',
-					name: siteConfig.author,
-					url: siteConfig.authorUrl,
-				},
-				datePublished: new Date(post.publishedAt).toISOString(),
-				url: canonical,
-				image: ogImage,
-				keywords: post.tags.join(', '),
-				publisher: {
-					'@type': 'Organization',
+	const jsonLd = serializeJsonLd(
+		post
+			? {
+					'@context': 'https://schema.org',
+					'@type': 'BlogPosting',
+					headline: post.title,
+					description: post.description,
+					author: {
+						'@type': 'Person',
+						name: siteConfig.author,
+						url: siteConfig.authorUrl,
+					},
+					datePublished: new Date(post.publishedAt).toISOString(),
+					url: canonical,
+					image: ogImage,
+					keywords: post.tags.join(', '),
+					publisher: {
+						'@type': 'Organization',
+						name: siteConfig.title,
+						url: baseUrl,
+					},
+				}
+			: {
+					'@context': 'https://schema.org',
+					'@type': 'WebSite',
 					name: siteConfig.title,
-					url: siteConfig.url,
-				},
-			})
-		: JSON.stringify({
-				'@context': 'https://schema.org',
-				'@type': 'WebSite',
-				name: siteConfig.title,
-				description: siteConfig.description,
-				url: siteConfig.url,
-				author: {
-					'@type': 'Person',
-					name: siteConfig.author,
-					url: siteConfig.authorUrl,
-				},
-			});
+					description: siteConfig.description,
+					url: baseUrl,
+					author: {
+						'@type': 'Person',
+						name: siteConfig.author,
+						url: siteConfig.authorUrl,
+					},
+				}
+	);
 
 	return {
 		title: pageTitle,

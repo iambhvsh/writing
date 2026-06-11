@@ -9,7 +9,9 @@
 		data: PageData;
 	}
 	const { data }: Props = $props();
-	const seo = buildSeo({ path: '/', seoTitle: 'Bhavesh Patil - Writing' });
+	const seo = $derived(
+		buildSeo({ path: '/', seoTitle: 'Bhavesh Patil – Writing', origin: data.origin })
+	);
 </script>
 
 <Seo {seo} />
@@ -23,7 +25,7 @@
 			width="88"
 			height="88"
 		/>
-		<h1 id="hero-heading" class="hero-title">{siteConfig.title} - Writing</h1>
+		<h1 id="hero-heading" class="hero-title">{siteConfig.title} – Writing</h1>
 		<p class="hero-bio">{siteConfig.description}</p>
 	</section>
 
@@ -62,7 +64,7 @@
 		font-family: var(--font-serif);
 		font-size: clamp(28px, 7vw, 34px);
 		font-weight: 400;
-		letter-spacing: -0.5px;
+		letter-spacing: var(--tracking-normal);
 		line-height: 1.15;
 		color: var(--color-text-primary);
 		margin: 0 0 8px;
@@ -72,7 +74,7 @@
 		font-size: 14px;
 		font-weight: 400;
 		color: var(--color-text-secondary);
-		letter-spacing: 0.1px;
+		letter-spacing: var(--tracking-normal);
 		line-height: 1.5;
 		margin: 0 auto;
 		max-width: 44ch;

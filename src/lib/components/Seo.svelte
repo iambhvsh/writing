@@ -7,7 +7,6 @@
 
 	const { seo }: Props = $props();
 
-	// JSON-LD is generated internally from typed data — no XSS risk
 	const jsonLdScript = $derived(`<script type="application/ld+json">${seo.jsonLd}<` + `/script>`);
 </script>
 

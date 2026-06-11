@@ -4,12 +4,12 @@ import type { PageLoad } from './$types.js';
 
 export const prerender = true;
 
-export const load: PageLoad = async ({ params }) => {
+export const load: PageLoad = async ({ params, url }) => {
 	const result = await getPost(params.slug);
 
 	if (!result) {
 		error(404, { message: 'Post not found' });
 	}
 
-	return result;
+	return { ...result, origin: url.origin };
 };

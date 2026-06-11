@@ -17,6 +17,7 @@
 			title: data.post.title,
 			description: data.post.description,
 			path: `/${data.post.slug}`,
+			origin: data.origin,
 			post: data.post,
 		})
 	);

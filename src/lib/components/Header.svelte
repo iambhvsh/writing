@@ -28,7 +28,7 @@
 <header>
 	<div class="header-bg"></div>
 	<div class="header-inner">
-		<a href="/" class="wordmark" aria-label="{siteConfig.title} — home">
+		<a href="/" class="wordmark" aria-label="{siteConfig.title} home">
 			{siteConfig.title}
 		</a>
 		<div class="header-actions">
@@ -56,16 +56,37 @@
 		top: 0;
 		z-index: 50;
 		border-bottom: 1px solid var(--color-border);
+		isolation: isolate;
 	}
 	.header-bg {
+		--header-glass-filter: blur(28px) saturate(1.18);
+
 		position: absolute;
 		inset: 0;
-		z-index: -1;
-		background-color: color-mix(in srgb, var(--color-bg) 72%, transparent);
-		backdrop-filter: blur(20px) saturate(1.08);
-		-webkit-backdrop-filter: blur(20px) saturate(1.08);
+		z-index: 0;
+		pointer-events: none;
+		background: linear-gradient(
+			to bottom,
+			color-mix(in srgb, var(--color-bg) 74%, transparent),
+			color-mix(in srgb, var(--color-bg) 48%, transparent)
+		);
+		backdrop-filter: var(--header-glass-filter);
+		-webkit-backdrop-filter: var(--header-glass-filter);
+	}
+	@supports (backdrop-filter: blur(1px)) {
+		.header-bg {
+			backdrop-filter: var(--header-glass-filter);
+		}
+	}
+	@supports (-webkit-backdrop-filter: blur(1px)) {
+		.header-bg {
+			backdrop-filter: var(--header-glass-filter);
+			-webkit-backdrop-filter: var(--header-glass-filter);
+		}
 	}
 	.header-inner {
+		position: relative;
+		z-index: 1;
 		max-width: 72rem;
 		margin: 0 auto;
 		padding: 0 1.5rem;
@@ -77,6 +98,7 @@
 	.wordmark {
 		font-family: var(--font-serif);
 		font-size: var(--text-xl);
+		font-weight: 600;
 		color: var(--color-text-primary);
 		text-decoration: none;
 		letter-spacing: var(--tracking-tight);

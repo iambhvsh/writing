@@ -1,5 +1,6 @@
 import { getAllPosts } from '$lib/content.js';
 import { siteConfig } from '$lib/config.js';
+import { xmlText } from '$lib/xml.js';
 import type { RequestHandler } from './$types.js';
 
 export const prerender = true;
@@ -11,7 +12,7 @@ export const GET: RequestHandler = async () => {
 		.map(
 			({ path, priority, changefreq }) => `
   <url>
-    <loc>${siteConfig.url}${path}</loc>
+    <loc>${xmlText(`${siteConfig.url}${path}`)}</loc>
     <priority>${priority}</priority>
     <changefreq>${changefreq}</changefreq>
   </url>`
@@ -23,7 +24,7 @@ export const GET: RequestHandler = async () => {
 			const lastmod = new Date(post.publishedAt).toISOString().split('T')[0] ?? '';
 			return `
   <url>
-    <loc>${siteConfig.url}/${post.slug}</loc>
+    <loc>${xmlText(`${siteConfig.url}/${post.slug}`)}</loc>
     <lastmod>${lastmod}</lastmod>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
