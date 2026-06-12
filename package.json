@@ -43,6 +43,7 @@
 		"@tailwindcss/typography": "^0.5.20",
 		"@tailwindcss/vite": "^4.3.0",
 		"@vercel/analytics": "^2.0.1",
+		"@vercel/speed-insights": "^2.0.0",
 		"date-fns": "^4.4.0",
 		"mdsvex": "^0.12.7",
 		"rehype-autolink-headings": "^7.1.0",
