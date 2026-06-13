@@ -82,7 +82,7 @@ function remarkTableOfContentsHeading() {
 function rehypeFigure() {
 	return (tree) => {
 		visit(tree, 'element', (node, index, parent) => {
-			if (node.tagName === 'img' && parent && (parent.type === 'root' || (parent.type === 'element' && parent.tagName !== 'figure')) && index !== undefined) {
+			if (node.tagName === 'img' && parent?.type === 'root' && index !== undefined) {
 				const alt = typeof node.properties?.alt === 'string' ? node.properties.alt : '';
 
 				const figure = {
