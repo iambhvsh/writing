@@ -1,0 +1,248 @@
+---
+title: Why Your AI Builds Look Like Everyone Else's
+description: On taste, judgment, and what actually separates quality software from the rest.
+publishedAt: 2026-06-12
+tags: vibe-coding, ai, craft, software-quality, product-design
+cover: ./cover.png
+coverAlt: Why Your AI Builds Look Like Everyone Else's - Bhavesh Patil
+---
+
+## The smallest part
+
+Most people think prompting is the hard part.
+
+It is not.
+
+Prompting is the last step in a long chain of decisions that most people never make. The thinking. The planning. The specification. The judgment about what this thing should actually be. The prompt arrives at the end of all that. It is the instruction, not the thought behind it.
+
+Skip everything before the prompt and the prompt carries nothing. The model fills that space with the most common answer to the most common version of the request.
+
+Averages are exactly what you get.
+
+## What the model reaches for
+
+I have noticed something consistent across AI-generated interfaces.
+
+The glowing dots. The floating cards. The gradient that starts indigo and fades into something only slightly different. The hero section that feels borrowed. The layout that could belong to a thousand products and therefore belongs to none of them.
+
+This is not an AI problem. It is a specification problem.
+
+AI does not invent. It completes. When a prompt is vague, the model reaches for the center of everything it has ever seen. It has no way of knowing what is specific about your product, your values, or your taste. It only knows what most people have built before.
+
+So it builds that.
+
+The model was not told what makes this different. So it made something safe.
+
+Safe is average. Average is forgettable.
+
+## A prompt is a specification
+
+Before I write a single line of instruction now, I stop and answer a harder question first.
+
+What is this, exactly?
+
+Not a category. Not a rough shape. The specific thing. The version that only makes sense in this context, for these people, with this particular feeling.
+
+What is being built. Why it exists. Who it is for. What it should feel like to use. What it should never feel like. What problem it is solving and what problems it refuses to create. Design expectations. Functional constraints. The things out of scope named as clearly as the things that are in.
+
+A prompt written after all of that is a different kind of instrument. It carries weight. It narrows the possibility space. It gives the model something to be precise about instead of something to average out.
+
+The quality of the output reflects the quality of the thinking that came before it. Almost exactly.
+
+![Prompt Quality vs. Output Quality](./prompt-quality-vs-output-quality.webp)
+
+## Three days, one new language, one real product
+
+I want to make this concrete, because it is easy to read advice like this and assume it applies to someone else.
+
+I built the platform you are reading this on in roughly three days. I had never written a line of Svelte before I started. I did not know the framework, the conventions, or the patterns. I only knew what I wanted the product to feel like.
+
+That clarity was the most valuable thing I brought to the process.
+
+The workflow had three stages.
+
+**Stage one was planning.** I spent the first hour or two with ChatGPT. Not asking it to build anything. Asking it to think with me. I described what I wanted. It pushed back. I refined. It challenged assumptions I had not noticed I was making. By the end of that conversation I had a specification. A real one. Not a list of features. A document that described the product, the audience, the experience, the constraints, and the principles that should govern every decision.
+
+I reviewed that document manually. I edited it. I made sure it matched what I actually intended.
+
+Then I handed it to Claude.
+
+**Stage two was implementation.** The first output was surprising. Structurally coherent, broadly correct, closer to the vision than I expected. But it was not the product. It was the beginning of the product.
+
+There were issues that only became visible through use. Missing refinements. Hidden inconsistencies. UX decisions that looked reasonable on first glance and revealed their problems on the third interaction. SEO gaps. Accessibility oversights. Edge cases that the model had not considered because I had not specified them.
+
+The first generated version was not something to ship. It was something to respond to.
+
+**Stage three was refinement.** I used Codex for this phase. Architecture improvements. Type safety. Build stability. Accessibility. Documentation. Naming conventions. Directory structure. The work of making something coherent into something intentional.
+
+This is the phase most people skip. It is also the phase where quality actually lives.
+
+The platform now maintains Lighthouse scores between 90 and 100 across performance, SEO, accessibility, and best practices. Zero build errors. Zero type errors. Zero lint errors. No unused imports, no unused variables, no outdated dependencies.
+
+That did not come from the AI. It came from the hours spent after the AI finished.
+
+## The loop that most people run halfway
+
+Vibe coding is a loop.
+
+![The Vibe Coding Loop](./vibe-coding-loop.webp)
+
+Most people stop at Generate.
+
+Something appears on screen. It mostly works. It has roughly the right structure, something close to the right idea. The temptation is to keep going. Add more. Prompt on top of the imprecision instead of correcting it.
+
+The result is drift. Each new prompt layers onto something that was never quite right. By the end, the product is structurally uncertain. Fixing it means reconstructing decisions that were never consciously made.
+
+The better habit is to stop at the first output. Inspect it as a real user would. Slowly. Without foreknowledge. What is confusing? What is absent? What is technically present but experientially missing?
+
+Then make one change. Not seven. One.
+
+![Iteration Shape](./iteration-shape.webp)
+
+There is something worth preserving about single-change iteration. The implementation is cleaner. Cause and effect stay visible. If something breaks, the source is close. If something improves, you understand why.
+
+## What consistency actually requires
+
+Consistency does not happen because the AI remembered the last session.
+
+It happens because someone wrote down what the product is and what it is not, and then made sure every decision was checked against that.
+
+A design system is not a luxury for large teams. It is the document that keeps the work from becoming incoherent over time.
+
+Typography. Color. Spacing. Component behavior. Animation. Naming. Accessibility. Not as a checklist. As a shared understanding of what this product believes about itself.
+
+When that document exists, every AI tool can be told to read it first. The output becomes more consistent not because the model got smarter, but because it was given less room to invent.
+
+The files I keep in every serious project:
+
+- `RULES.md` — what the AI is always and never allowed to do
+- `DESIGN_SYSTEM.md` — tokens, type, color, spacing, component rules
+- `ARCHITECTURE.md` — structural decisions, patterns, naming conventions
+- `IMPLEMENTATION.md` — how features are built, not just what they are
+
+None of this is glamorous. But it is the difference between a product that stays coherent across weeks and one that starts contradicting itself by day three.
+
+## The structure should explain itself
+
+One of the things I kept asking myself while building this platform was whether a developer returning after ten years could understand it in two minutes.
+
+Future-me is effectively a new contributor. So is every AI tool that opens the codebase. The structure should not require explanation. It should communicate on its own.
+
+The root directory of this platform has three folders.
+
+```text
+/
+├── src/
+├── static/
+└── writings/
+```
+
+Source code. Public assets. Articles. Nothing else.
+
+Inside `src`, there are two more.
+
+```text
+src/
+├── lib/
+└── routes/
+```
+
+Reusable code. Application routes. Still nothing to explain.
+
+Publishing a new post is:
+
+1. Open `writings/`
+2. Create a folder
+3. Create `index.svx`
+4. Write
+5. Publish
+
+No CMS. No dashboard. No instructions required. The folder structure is the workflow.
+
+Every file lives where its name suggests it should. `seo.ts` handles SEO. `og.ts` handles Open Graph. `search.ts` handles search. A developer should rarely ask where something belongs. The structure should answer automatically.
+
+This is what intentionality looks like at the architectural level. Not clever patterns. Not sophisticated abstractions. A system that explains itself.
+
+## Context wears out
+
+Something happens in long AI conversations that I had to learn to manage rather than resent.
+
+The early context fades. Decisions made in the first few messages stop shaping the decisions being made now. The model begins to invent where it once respected. Small inconsistencies appear, then larger ones.
+
+This is not a flaw. It is a condition.
+
+Every five or six significant prompts, I reintroduce the things that matter. The architecture decisions. The design language. The documents that define what the product is. Not because the model forgot. Because the context window is carrying too many other things now, and the important constraints have been pushed to the edges.
+
+Returning to the brief. The brief has not changed. It just needs to be present again.
+
+## The audit nobody runs
+
+After a long implementation session there is usually a version of the code that works but is not clean.
+
+Dead functions. Components that were replaced but never removed. Logic refactored in one place and not updated in two others. Patterns that drifted from the design system. Naming that was consistent in week one and is not consistent now.
+
+The code runs. But it is carrying weight it should not be carrying.
+
+![The Quality Pipeline](./quality-pipeline.webp)
+
+An audit is not extra work. It is the work. It is the part where the product stops being a series of accumulated decisions and starts being something deliberate.
+
+Check for inconsistency. Remove what is no longer used. Verify that existing patterns are respected and not quietly replaced by new ones. Ask the AI to find logic that is being duplicated where it should be shared.
+
+Then run the quality pipeline. Not as ceremony. As proof.
+
+## Simplicity is not fewer features
+
+There is a definition of simplicity I keep returning to.
+
+Simplicity is not fewer features. It is not less capability. It is not reduced functionality.
+
+Simplicity is the absence of confusion.
+
+The goal is maximum capability with minimum confusion. A system where functionality can increase and complexity remains understandable. Where the user does not need instructions. Where the developer does not need instructions. Where future-me does not need instructions.
+
+The system itself should communicate how it works.
+
+I borrow a question from the way certain companies approach product decisions. Before adding something, ask: would it be better to simplify instead? Before adding a setting, ask: would it be better to improve the default? Before shipping a screen, ask: would a person understand this in six seconds without help?
+
+Most things that seem necessary turn out to be compensations for something that was not thought through clearly enough earlier. The feature that patches the gap in the flow. The setting that covers a decision that was never made. The complexity that exists because simplicity required more judgment than was available at the time.
+
+That judgment is almost always available. It just requires stopping long enough to use it.
+
+## The part that cannot be generated
+
+AI can write the code. It can produce the layout, the component library, the routing logic, the full working application in a fraction of the time any of that used to require.
+
+What it cannot do is care whether the result is good.
+
+It cannot look at a finished screen and feel that something is slightly off. It cannot sit with the product long enough to notice the friction a real user would find in the first thirty seconds. It cannot decide this version is not good enough, even though it technically works.
+
+That part belongs to the person building it.
+
+The difference between software that feels considered and software that feels generated is not the model. It is not the prompting technique, the tool, or the number of iterations.
+
+It is whether the person building had enough taste to recognize mediocrity and enough patience to refuse it.
+
+## What the work actually asks for
+
+AI is leverage. It is not authorship.
+
+It generates options. The judgment about which option belongs is still yours.
+
+It accelerates production. The standards that production is held to are still yours.
+
+It fills specification with output. The specification itself, the thinking about what is worth building, how it should feel, why it should exist, that remains the most important part of the process. And it cannot be delegated.
+
+AI reduced the time it took me to build this platform. That saved time did not go back into my pocket. It went into the quality of the work. Into the audit. Into the documentation. Into the decisions about what to remove. Into reading the codebase as a stranger would and asking whether it made sense.
+
+That is where the product became something I was proud of. Not during generation. After it.
+
+The products worth building are not the ones generated fastest.
+
+They are the ones where someone cared enough to stop, repeatedly, and ask whether it was good yet.
+
+Taste. Judgment. Patience. Attention to detail.
+
+These are not soft skills. They are the bottleneck.
+
+And they are the part worth protecting.
