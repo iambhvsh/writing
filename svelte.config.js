@@ -6,6 +6,8 @@ import remarkToc from 'remark-toc';
 import rehypeSlug from 'rehype-slug';
 import rehypeUnwrapImages from 'rehype-unwrap-images';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import remarkRelativeImages from 'mdsvex-relative-images';
+import { visit } from 'unist-util-visit';
 
 const DEFAULT_SITE_URL = 'https://writing.iambhvsh.in';
 
@@ -77,6 +79,34 @@ function remarkTableOfContentsHeading() {
 	};
 }
 
+function rehypeFigure() {
+	return (tree) => {
+		visit(tree, 'element', (node, index, parent) => {
+			if (node.tagName === 'img' && parent?.type === 'root' && index !== undefined) {
+				const alt = typeof node.properties?.alt === 'string' ? node.properties.alt : '';
+
+				const figure = {
+					type: 'element',
+					tagName: 'figure',
+					properties: {},
+					children: [node]
+				};
+
+				if (alt.trim() !== '') {
+					figure.children.push({
+						type: 'element',
+						tagName: 'figcaption',
+						properties: {},
+						children: [{ type: 'text', value: alt }]
+					});
+				}
+
+				parent.children[index] = figure;
+			}
+		});
+	};
+}
+
 /** @type {import('mdsvex').MdsvexOptions} */
 const mdsvexOptions = {
 	extensions: ['.svx', '.md'],
@@ -86,8 +116,12 @@ const mdsvexOptions = {
 			return `{@html \`${html}\`}`;
 		}
 	},
-	remarkPlugins: [remarkTableOfContentsHeading, [remarkToc, { tight: true, ordered: false }]],
-	rehypePlugins: [rehypeUnwrapImages, rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }]]
+	remarkPlugins: [
+		remarkRelativeImages,
+		remarkTableOfContentsHeading,
+		[remarkToc, { tight: true, ordered: false }]
+	],
+	rehypePlugins: [rehypeUnwrapImages, rehypeFigure, rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }]]
 };
 
 /** @type {import('@sveltejs/kit').Config} */
