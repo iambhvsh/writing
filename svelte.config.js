@@ -7,6 +7,7 @@ import rehypeSlug from 'rehype-slug';
 import rehypeUnwrapImages from 'rehype-unwrap-images';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import remarkRelativeImages from 'mdsvex-relative-images';
+import customRehypeFigure from './src/lib/rehype-figure.js';
 
 const DEFAULT_SITE_URL = 'https://writing.iambhvsh.in';
 
@@ -92,7 +93,7 @@ const mdsvexOptions = {
 		remarkTableOfContentsHeading,
 		[remarkToc, { tight: true, ordered: false }]
 	],
-	rehypePlugins: [rehypeUnwrapImages, rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }]]
+	rehypePlugins: [rehypeUnwrapImages, customRehypeFigure, rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }]]
 };
 
 /** @type {import('@sveltejs/kit').Config} */
