@@ -5,7 +5,7 @@ import { formatDate } from '$lib/utils.js';
 import { getOgFonts, renderOgImage } from '$lib/og.js';
 import type { EntryGenerator, RequestHandler } from './$types.js';
 
-export const prerender = true;
+export const prerender = 'auto';
 
 export const entries: EntryGenerator = async () => {
 	const posts = await getAllPosts();
