@@ -1,0 +1,191 @@
+---
+title: "Day 0: Beginning My Swift Journey with 100 Days of SwiftUI"
+description: "After years of web development, I'm learning Swift and SwiftUI for the first time. Follow my journey into Apple development through 100 Days of SwiftUI."
+date: "2026-06-19"
+tags: Swift, SwiftUI, Apple Development, iOS Development, Programming, Learning in Public, 100 Days of SwiftUI
+coverImage: "./cover.jpg"
+coverAlt: "Swift logo representing the start of a Swift and SwiftUI learning journey"
+---
+
+## The Language Behind the Inspiration
+
+My programming journey began in 2022.
+
+Like many developers, I did not discover programming through a classroom or a textbook. A friend introduced me to the world of software development, and what started as curiosity quickly turned into something much bigger.
+
+I began where many modern developers begin: the web.
+
+HTML, CSS, JavaScript, frameworks, APIs, deployments, and countless side projects filled the years that followed. Every new project taught me something. Every mistake revealed another lesson. Every challenge became an opportunity to improve.
+
+The code I wrote in those early days was far from perfect.
+
+Looking back, much of it was inconsistent, poorly structured, and held together more by enthusiasm than experience.
+
+But that never really mattered.
+
+When you're just starting, the goal is not to write perfect code. The goal is to build. To experiment. To learn. To discover what excites you enough to keep going.
+
+Over time, something changed.
+
+I became less interested in simply making software work and more interested in how software feels.
+
+How interfaces communicate.
+
+How consistency builds trust.
+
+How thoughtful design removes friction.
+
+How small details create memorable experiences.
+
+Whether it's a button, a transition, a navigation pattern, or a single line of supporting text, I care about how it looks, how it behaves, and how it contributes to the overall experience.
+
+A significant part of that influence came from Apple.
+
+Not the hardware.
+
+The software.
+
+The consistency across products. The attention to detail. The focus on simplicity. The intentionality behind every interaction. The belief that technology should feel approachable, intuitive, and human.
+
+Those ideas gradually shaped the way I think about software.
+
+Many of the design decisions I make today can be traced back to principles I admired long before I ever considered learning Swift.
+
+In many ways, Swift is not where that inspiration began.
+
+It's where that inspiration eventually led.
+
+## Why Swift?
+
+Swift is Apple's modern programming language.
+
+Fast.
+
+Expressive.
+
+Safe.
+
+Designed to power everything from command-line tools and cloud services to applications running across iPhone, iPad, Mac, Apple Watch, and Apple TV.
+
+What attracts me most is not just the language itself.
+
+It's the ecosystem surrounding it.
+
+For years, I've admired the way Apple approaches software design. The consistency across platforms. The shared design language. The seamless integration between devices. The idea that software and hardware should feel like parts of the same experience.
+
+Swift sits at the center of that ecosystem.
+
+Learning Swift means learning how those experiences are built.
+
+Another reason is simple.
+
+I wanted something different.
+
+I've spent years building for the web. While I still enjoy web development, I wanted to challenge myself with a new platform, a new set of tools, and a different way of thinking about software.
+
+Swift felt like the natural next step.
+
+It combines modern language design, strong safety guarantees, excellent tooling, and the ability to build for an entire ecosystem using a shared foundation.
+
+Write once.
+
+Adapt across iPhone, iPad, Mac, Apple Watch, and Apple TV.
+
+That idea is incredibly compelling.
+
+## Starting Without Apple Hardware
+
+One common misconception is that learning Apple development requires owning Apple hardware from day one.
+
+Eventually, having a Mac becomes important.
+
+But learning does not start with hardware.
+
+Learning starts with curiosity.
+
+I'm currently a third-year student.
+
+I don't own a MacBook.
+
+I don't own an iPhone.
+
+Yet.
+
+What I do have is access to excellent educational resources, documentation, community support, and a genuine interest in learning.
+
+For now, that's enough.
+
+The hardware can come later.
+
+The foundation starts today.
+
+## Beginning with 100 Days of SwiftUI
+
+To begin this journey, I've chosen one of the most respected learning resources in the Swift community:
+
+**100 Days of SwiftUI** by Paul Hudson.
+
+If you're interested in following along:
+
+- https://www.hackingwithswift.com/100/swiftui
+- https://x.com/twostraws
+
+## Day 0: Understanding the Road Ahead
+
+Interestingly, Day 0 wasn't about writing code.
+
+There were no variables.
+
+No functions.
+
+No SwiftUI views.
+
+No applications.
+
+Instead, it focused on understanding the roadmap.
+
+### Core Skills
+
+- Swift
+- SwiftUI
+- Working with Data
+- Networking
+- Version Control
+
+### Extension Skills
+
+- UIKit
+- Core Data
+- Multithreading
+- Architecture
+- Testing
+
+### Common Mistakes Worth Avoiding
+
+- Trying to memorize everything
+- Shiny Object Syndrome
+- Lone Wolf Training
+- Using beta software
+- Starting with documentation
+- Getting lost in Objective-C
+- Taking shots at other languages
+
+## Looking Ahead
+
+Today was not about building an app.
+
+It was about understanding the journey.
+
+Tomorrow begins with the fundamentals.
+
+Variables.
+
+Constants.
+
+Data types.
+
+Every developer starts somewhere.
+
+Today was my first step into Swift.
+
+And I'm excited to see where the next one hundred days lead.
