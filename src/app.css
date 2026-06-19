@@ -219,6 +219,8 @@ body {
 	text-decoration-thickness: 1px;
 	text-decoration-color: var(--color-border-strong);
 	transition: text-decoration-color var(--duration-fast) var(--ease-base);
+	overflow-wrap: break-word;
+	word-break: break-word;
 }
 
 .prose a:hover {
