@@ -1,7 +1,7 @@
 ---
 title: "Day 0: Beginning My Swift Journey with 100 Days of SwiftUI"
 description: "After years of web development, I'm learning Swift and SwiftUI for the first time. Follow my journey into Apple development through 100 Days of SwiftUI."
-date: "2026-06-19"
+publishedAt: 2026-06-19
 tags: Swift, SwiftUI, Apple Development, iOS Development, Programming, Learning in Public, 100 Days of SwiftUI
 coverImage: "./cover.jpg"
 coverAlt: "Swift logo representing the start of a Swift and SwiftUI learning journey"
