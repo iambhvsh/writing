@@ -67,9 +67,10 @@ function parseFrontmatter(file: RawPostFile, errors: string[]): ParsedFrontmatte
 			errors.push(`Missing cover image.\nFound: ${coverImage} in ${file.path}.\nAdd ${postDirectory(file.path)}/${normalized} or update frontmatter.`);
 		}
 	}
-	if (!title || !description || !publishedAt || !tagsValue) return undefined;
-	if (coverImage && coverAlt) return { title, description, publishedAt, tags: parseTags(tagsValue), coverImage, coverAlt };
-	return { title, description, publishedAt, tags: parseTags(tagsValue) };
+	const tags = parseTags(tagsValue ?? '');
+	if (!title || !description || !publishedAt || !tagsValue || tags.length === 0) return undefined;
+	if (coverImage && coverAlt) return { title, description, publishedAt, tags, coverImage, coverAlt };
+	return { title, description, publishedAt, tags };
 }
 
 function collectReferences(file: RawPostFile, frontmatter: ParsedFrontmatter | undefined, errors: string[]): AssetReference[] {
@@ -95,7 +96,7 @@ function collectReferences(file: RawPostFile, frontmatter: ParsedFrontmatter | u
 			if (DISALLOWED_BODY_IMAGES.has(extension)) {
 				errors.push(`Invalid body image.\nFound: ${value} in ${file.path}.\nUse .webp or .gif for body images. Cover images must be configured with coverImage.`);
 			}
-			if (/\bsrc=/.test(match[0]) && /\.(mp4|webm)$/i.exec(normalized) && !ALLOWED_BODY_VIDEOS.has(extension)) {
+			if (/\bsrc=/.test(match[0]) && !ALLOWED_BODY_VIDEOS.has(extension)) {
 				errors.push(`Invalid body video.\nFound: ${value} in ${file.path}.\nUse .mp4 or .webm for body videos.`);
 			}
 			if (!getAssetUrl(file.path, value)) {

@@ -15,7 +15,9 @@ export function isRecord(value: object | string | number | boolean | Date | read
 
 export function normalizePublishedAt(value: string | Date): string | undefined {
 	if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
-		return new Date(`${value}T00:00:00.000Z`).toISOString();
+		const date = new Date(`${value}T00:00:00.000Z`);
+		if (Number.isNaN(date.getTime())) return undefined;
+		return date.toISOString();
 	}
 	const timestamp = value instanceof Date ? value.getTime() : Date.parse(value);
 	return Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : undefined;
