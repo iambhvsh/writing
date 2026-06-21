@@ -3,7 +3,7 @@ title: Protecting Attention
 description: Notes on keeping enough quiet in the day to notice better ideas before they disappear.
 publishedAt: 2026-06-11
 tags: attention, craft, work
-cover: ./cover.png
+coverImage: "./cover.png"
 coverAlt: Protecting Attention - Bhavesh Patil
 ---
 

@@ -3,7 +3,7 @@ title: Why Your AI Builds Look Like Everyone Else's
 description: On taste, judgment, and what actually separates quality software from the rest.
 publishedAt: 2026-06-13
 tags: vibe-coding, ai, craft, software-quality, product-design
-cover: ./cover.png
+coverImage: "./cover.png"
 coverAlt: Why Your AI Builds Look Like Everyone Else's - Bhavesh Patil
 ---
 

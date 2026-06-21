@@ -28,7 +28,6 @@
 		"eslint-plugin-svelte": "^3.19.0",
 		"globals": "^17.6.0",
 		"knip": "^6.16.1",
-		"mdsvex-relative-images": "^2.0.0",
 		"pagefind": "^1.5.2",
 		"prettier": "^3.8.4",
 		"prettier-plugin-svelte": "^4.1.0",

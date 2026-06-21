@@ -3,8 +3,6 @@ title: "Day 1: Writing My First Swift Code"
 description: "Today I wrote my first real Swift code. Variables, constants, strings, interpolation, properties, methods, numbers, and discovering how Swift encourages clarity."
 publishedAt: 2026-06-20
 tags: Swift, SwiftUI, Apple Development, iOS Development, Programming, Learning in Public, 100 Days of SwiftUI
-coverImage: "./cover.jpg"
-coverAlt: "Swift code displayed in a development environment"
 ---
 
 ## The First Lines of Swift

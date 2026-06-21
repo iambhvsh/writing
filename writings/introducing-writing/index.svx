@@ -3,7 +3,7 @@ title: Introducing Writing
 description: A first note on this space, why it exists, and the system behind it.
 publishedAt: 2026-06-10
 tags: writing, design, engineering
-cover: ./cover.png
+coverImage: "./cover.png"
 coverAlt: Introducing Writing - Bhavesh Patil
 ---
 

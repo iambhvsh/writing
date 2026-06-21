@@ -6,7 +6,6 @@ import remarkToc from 'remark-toc';
 import rehypeSlug from 'rehype-slug';
 import rehypeUnwrapImages from 'rehype-unwrap-images';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import remarkRelativeImages from 'mdsvex-relative-images';
 import { visit } from 'unist-util-visit';
 
 const DEFAULT_SITE_URL = 'https://writing.iambhvsh.in';
@@ -52,6 +51,15 @@ const highlighter = await createHighlighter({
 		'plaintext'
 	]
 });
+
+
+function isLocalContentAsset(value) {
+	return typeof value === 'string' && value.startsWith('./');
+}
+
+function viteAssetExpression(value) {
+	return `{new URL('${value}', import.meta.url).href}`;
+}
 
 function remarkTableOfContentsHeading() {
 	return (tree) => {
@@ -106,7 +114,7 @@ function rehypeFigure() {
 
 /** @type {import('mdsvex').MdsvexOptions} */
 const mdsvexOptions = {
-	extensions: ['.svx', '.md'],
+	extensions: ['.svx'],
 	highlight: {
 		highlighter: async (code, lang = 'text') => {
 			const html = escapeSvelte(highlighter.codeToHtml(code, { lang, theme }));
@@ -114,7 +122,6 @@ const mdsvexOptions = {
 		}
 	},
 	remarkPlugins: [
-		remarkRelativeImages,
 		remarkTableOfContentsHeading,
 		[remarkToc, { tight: true, ordered: false }]
 	],
@@ -123,7 +130,7 @@ const mdsvexOptions = {
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	extensions: ['.svelte', '.svx', '.md'],
+	extensions: ['.svelte', '.svx'],
 	preprocess: [vitePreprocess(), mdsvex(mdsvexOptions)],
 	kit: {
 		adapter: adapter({

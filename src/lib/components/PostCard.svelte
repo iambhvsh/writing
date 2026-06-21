@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Post } from '$lib/types.js';
+	import type { Post } from '$lib/content/index.js';
 	import { formatDate } from '$lib/utils.js';
 
 	interface Props {

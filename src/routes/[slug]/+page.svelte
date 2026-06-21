@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { PageData } from './$types.js';
-	import type { Component } from 'svelte';
 	import Seo from '$lib/components/Seo.svelte';
 	import TagBadge from '$lib/components/TagBadge.svelte';
 	import { buildSeo } from '$lib/seo.js';
@@ -22,7 +21,7 @@
 		})
 	);
 
-	const PostContent = $derived(data.component as Component);
+	const PostContent = $derived(data.component);
 	const avatarUrl = 'https://db.iambhvsh.in/assets/profile.webp';
 </script>
 

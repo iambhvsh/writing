@@ -1,5 +1,5 @@
 import { siteConfig } from './config.js';
-import type { Post } from './types.js';
+import type { Post } from './content/index.js';
 
 export interface SeoMeta {
 	title: string;
@@ -20,7 +20,7 @@ interface OgMeta {
 	siteName: string;
 	publishedTime?: string;
 	author?: string;
-	tags?: string[];
+	tags?: readonly string[];
 }
 
 interface TwitterMeta {
