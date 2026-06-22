@@ -12,6 +12,7 @@ export default defineConfig({
 	build: {
 		cssMinify: 'esbuild',
 		sourcemap: false,
+                assetsInlineLimit: 0,
 		rolldownOptions: {
 			checks: {
 				pluginTimings: false,

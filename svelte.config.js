@@ -6,7 +6,7 @@ import remarkToc from 'remark-toc';
 import rehypeSlug from 'rehype-slug';
 import rehypeUnwrapImages from 'rehype-unwrap-images';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import remarkRelativeImages from 'mdsvex-relative-images';
+import remarkRelativeAssets from './src/lib/assets.ts';
 import { visit } from 'unist-util-visit';
 
 const DEFAULT_SITE_URL = 'https://writing.iambhvsh.in';
@@ -114,7 +114,7 @@ const mdsvexOptions = {
 		}
 	},
 	remarkPlugins: [
-		remarkRelativeImages,
+		remarkRelativeAssets,
 		remarkTableOfContentsHeading,
 		[remarkToc, { tight: true, ordered: false }]
 	],
