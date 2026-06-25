@@ -1,0 +1,222 @@
+---
+title: "Day 2: Thinking in Swift"
+description: "Today I explored Booleans, string interpolation, expressions, and completed my first Swift checkpoint by building a Celsius to Fahrenheit converter."
+publishedAt: 2026-06-21
+tags: Swift, Swift Language, Apple Development, Swift Basics, iOS Development, Learning in Public, 100 Days of SwiftUI, Programming
+coverImage: "./cover.jpg"
+coverAlt: "Swift code demonstrating Booleans, string interpolation, and a temperature conversion program"
+---
+
+## Thinking Beyond Syntax
+
+Yesterday was about getting comfortable with Swift's syntax.
+
+Today was about understanding how Swift wants developers to think.
+
+The concepts themselves weren't particularly difficult.
+
+Booleans.
+
+String interpolation.
+
+A simple temperature conversion.
+
+Yet every topic revealed something about the language's philosophy.
+
+Swift consistently encourages writing code that's expressive, intentional, and easy to read. Rather than relying on clever shortcuts, it nudges you toward writing code that explains itself.
+
+That became much more apparent today.
+
+## Exploring Booleans
+
+A Boolean is one of the simplest types in programming.
+
+It can only be one of two values.
+
+```swift
+var isMovieGood = false
+```
+
+While that seems straightforward, what interested me more was how naturally Swift lets you work with Boolean values.
+
+For example, checking whether a number is divisible by another number:
+
+```swift
+let number = 120
+
+print(number.isMultiple(of: 3))
+```
+
+Or checking whether a string ends with a particular word:
+
+```swift
+let name = "Peter Benjamin Parker"
+
+print(name.hasSuffix("Parker"))
+```
+
+Both methods return either `true` or `false`.
+
+More importantly, they read almost like plain English.
+
+Instead of writing complicated conditions, Swift gives you descriptive methods that immediately communicate what the code is doing.
+
+## Changing Boolean Values
+
+I also learned two different ways to flip a Boolean.
+
+The first uses the logical NOT operator.
+
+```swift
+isMovieGood = !isMovieGood
+```
+
+The second uses Swift's built-in `toggle()` method.
+
+```swift
+isMovieGood.toggle()
+```
+
+Both achieve exactly the same result.
+
+Personally, I find `toggle()` easier to read because it describes the intention instead of the implementation.
+
+Small details like this make Swift feel very approachable.
+
+## Joining Strings
+
+The next topic was creating longer strings from smaller pieces.
+
+The first approach uses string concatenation.
+
+```swift
+print("My name is " + firstName + " " + lastName + " and I'm " + String(age) + " years old!")
+```
+
+It works perfectly.
+
+But it also involves a lot of manual work.
+
+Spaces have to be inserted manually.
+
+Numbers have to be converted into strings.
+
+As the sentence grows longer, the code becomes harder to read.
+
+## String Interpolation
+
+Swift's preferred solution is string interpolation.
+
+```swift
+print("My name is \(firstName) \(lastName) and I'm \(age) years old!")
+```
+
+The output is identical.
+
+The difference is readability.
+
+The code almost looks exactly like the final sentence, while Swift automatically converts values like integers into text.
+
+Coming from JavaScript, it reminded me of template literals, but Swift's syntax feels even cleaner because it's built directly into the language.
+
+I can already tell this will become my default way of creating strings.
+
+## Expressions Inside Strings
+
+One feature I wasn't expecting was that string interpolation isn't limited to variables.
+
+It can also evaluate expressions.
+
+```swift
+print("5 × 5 = \(5 * 5)")
+```
+
+Output:
+
+```text
+5 × 5 = 25
+```
+
+Anything placed inside `\( )` is evaluated before becoming part of the final string.
+
+It's a simple feature, but it makes creating dynamic text incredibly flexible.
+
+## My First Swift Checkpoint
+
+The highlight of today's lesson was completing my first checkpoint.
+
+The challenge was simple.
+
+Write a program that converts Celsius to Fahrenheit.
+
+```swift
+let tempInCelsius = 23.0
+let tempInFahrenheit = (tempInCelsius * 9 / 5) + 32
+
+print("""
+Temperature in Celsius: \(tempInCelsius)°C
+Temperature in Fahrenheit: \(tempInFahrenheit)°F
+""")
+```
+
+At first I used an `Int`.
+
+It worked for whole numbers, but I quickly realized temperatures aren't always whole numbers.
+
+Changing the values to `Double` made the program work correctly for decimal temperatures as well.
+
+It was a small adjustment, but a good reminder that choosing the correct data type matters just as much as writing the formula itself.
+
+## A Pattern Is Emerging
+
+After only two days, I'm starting to notice a recurring pattern.
+
+Swift places a huge emphasis on readability.
+
+Methods like:
+
+```swift
+number.isMultiple(of: 3)
+```
+
+and
+
+```swift
+name.hasSuffix("Parker")
+```
+
+read almost like normal English.
+
+String interpolation removes unnecessary complexity.
+
+Methods have descriptive names.
+
+The language consistently encourages code that's easy to understand—not only for the compiler, but also for the person reading it.
+
+That's something I'm appreciating more with every lesson.
+
+## Looking Ahead
+
+I'm still nowhere near building apps.
+
+No SwiftUI.
+
+No views.
+
+No buttons.
+
+Just learning the language itself.
+
+It's tempting to jump straight into creating interfaces, but building a solid understanding of Swift first feels like the right decision.
+
+Every concept I learn now will make everything that comes later easier to understand.
+
+Two days down.
+
+Ninety-eight to go.
+
+## Day 2 Code
+
+The complete code from today's learning session is available here:
+
+- [booleans-and-strings.swift](./booleans-and-strings.swift)
