@@ -11,17 +11,21 @@ export const GET: RequestHandler = async () => {
 
 	const items = posts
 		.slice(0, 20)
-		.map(
-			(post) => `
+		.map((post) => {
+			const baseUrl = siteConfig.url.replace(/\/$/, '');
+			const imagePath = post.cover ?? `/${post.slug}/og.png`;
+			const imageUrl = imagePath.startsWith('http') ? imagePath : `${baseUrl}${imagePath}`;
+			return `
     <item>
       <title>${xmlCdata(post.title)}</title>
       <description>${xmlCdata(post.description)}</description>
       <link>${xmlText(`${siteConfig.url}/${post.slug}`)}</link>
       <guid isPermaLink="true">${xmlText(`${siteConfig.url}/${post.slug}`)}</guid>
       <pubDate>${new Date(post.publishedAt).toUTCString()}</pubDate>
+      <enclosure url="${xmlText(imageUrl)}" type="image/png" />
       ${post.tags.map((tag) => `<category>${xmlCdata(tag)}</category>`).join('\n      ')}
-    </item>`
-		)
+    </item>`;
+		})
 		.join('');
 
 	const rss = `<?xml version="1.0" encoding="UTF-8"?>

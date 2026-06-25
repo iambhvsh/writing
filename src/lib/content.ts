@@ -38,17 +38,26 @@ function slugFromPath(path: string): string {
 	return path.replace(WRITINGS_ROOT, '').replace(/\/index\.(svx|md)$/, '');
 }
 
-function calcReadingTime(content: string): number {
-	const text = content
-		.replace(/^---[\s\S]*?---/, ' ')
-		.replace(/<[^>]*>/g, ' ')
-		.replace(/```[\s\S]*?```/g, ' ')
-		.replace(/`[^`]*`/g, ' ')
-		.replace(/[#>*_[\]()~-]/g, ' ')
-		.replace(/&[a-z\d#]+;/gi, ' ')
-		.trim();
-	const wordCount = text.match(/[\w]+(?:['-][\w]+)*/g)?.length ?? 0;
-	return Math.max(1, Math.ceil(wordCount / WORDS_PER_MINUTE));
+function parseContentMetrics(content: string): {
+	plainText: string;
+	wordCount: number;
+	readingTime: number;
+} {
+	// Strip frontmatter
+	let plainText = content.replace(/^---[\s\S]*?---/, '');
+	// Remove HTML tags
+	plainText = plainText.replace(/<[^>]*>/g, '');
+	// Remove markdown formatting but keep the readable text
+	plainText = plainText.replace(/[#>*_[\]()~-]/g, ' ');
+	// Replace entities
+	plainText = plainText.replace(/&[a-z\d#]+;/gi, ' ');
+	// Normalize whitespace
+	plainText = plainText.replace(/\s+/g, ' ').trim();
+
+	const wordCount = plainText.match(/[\w]+(?:['-][\w]+)*/g)?.length ?? 0;
+	const readingTime = Math.max(1, Math.ceil(wordCount / WORDS_PER_MINUTE));
+
+	return { plainText, wordCount, readingTime };
 }
 
 async function getRawContent(path: string): Promise<string> {
@@ -154,7 +163,11 @@ function readPostMetadata(path: string, metadata: unknown): NormalizedPostMetada
 	return normalized;
 }
 
-function buildPost(path: string, metadata: unknown, readingTime: number): Post {
+function buildPost(
+	path: string,
+	metadata: unknown,
+	metrics: { plainText: string; wordCount: number; readingTime: number }
+): Post {
 	const frontmatter = readPostMetadata(path, metadata);
 	const cover = resolveCover(path, frontmatter.cover);
 
@@ -164,7 +177,9 @@ function buildPost(path: string, metadata: unknown, readingTime: number): Post {
 		description: frontmatter.description,
 		publishedAt: frontmatter.publishedAt,
 		tags: frontmatter.tags,
-		readingTime,
+		readingTime: metrics.readingTime,
+		plainText: metrics.plainText,
+		wordCount: metrics.wordCount,
 	};
 
 	if (cover !== undefined) post.cover = cover;
@@ -180,8 +195,10 @@ export async function getAllPosts(): Promise<Post[]> {
 		const mod = (await loader()) as PostModule;
 
 		const rawContent = await getRawContent(path);
-		const rt = rawContent ? calcReadingTime(rawContent) : 1;
-		posts.push(buildPost(path, mod.metadata, rt));
+		const metrics = rawContent
+			? parseContentMetrics(rawContent)
+			: { plainText: '', wordCount: 0, readingTime: 1 };
+		posts.push(buildPost(path, mod.metadata, metrics));
 	}
 
 	return posts.sort(
@@ -202,8 +219,10 @@ export async function getPost(slug: string): Promise<{
 	const mod = (await loader()) as PostModule;
 
 	const rawContent = await getRawContent(path in modules ? path : mdPath);
-	const rt = rawContent ? calcReadingTime(rawContent) : 1;
-	const postData = buildPost(path in modules ? path : mdPath, mod.metadata, rt);
+	const metrics = rawContent
+		? parseContentMetrics(rawContent)
+		: { plainText: '', wordCount: 0, readingTime: 1 };
+	const postData = buildPost(path in modules ? path : mdPath, mod.metadata, metrics);
 
 	return {
 		post: postData,

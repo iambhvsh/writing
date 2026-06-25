@@ -110,14 +110,17 @@ export default function remarkRelativeAssets() {
 			if (!SCRIPT_OPEN_TAG.test(node.value)) return;
 			if (MODULE_SCRIPT_OPEN_TAG.test(node.value)) return;
 
-			node.value = node.value.replace(SCRIPT_OPEN_TAG, (openTag) => `${openTag}\n${importStatements}`);
+			node.value = node.value.replace(
+				SCRIPT_OPEN_TAG,
+				(openTag) => `${openTag}\n${importStatements}`
+			);
 			mergedIntoExisting = true;
 		});
 
 		if (!mergedIntoExisting) {
 			tree.children.push({
 				type: 'html',
-				value: `<script>\n${importStatements}</script>`
+				value: `<script>\n${importStatements}</script>`,
 			});
 		}
 	};

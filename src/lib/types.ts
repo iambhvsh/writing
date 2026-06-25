@@ -7,6 +7,8 @@ export interface Post {
 	cover?: string;
 	coverAlt?: string;
 	readingTime: number;
+	plainText: string;
+	wordCount: number;
 }
 
 export interface SiteConfig {
