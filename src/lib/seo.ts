@@ -37,6 +37,12 @@ function serializeJsonLd(value: unknown): string {
 	return JSON.stringify(value).replace(/</g, '\\u003c');
 }
 
+export function getPostImageUrl(post: Post, baseUrl: string): string {
+	const normalizedBase = baseUrl.replace(/\/$/, '');
+	const imagePath = post.cover ?? `/${post.slug}/og.png`;
+	return imagePath.startsWith('http') ? imagePath : `${normalizedBase}${imagePath}`;
+}
+
 export function buildSeo(options: {
 	title?: string;
 	seoTitle?: string;
@@ -53,8 +59,11 @@ export function buildSeo(options: {
 	const pagePath = path.startsWith('/') ? path : `/${path}`;
 	const canonical = `${baseUrl}${pagePath}`;
 	const fallbackImage = siteConfig.ogImage ?? '/og.png';
-	const imagePath = post ? (post.cover ?? `${pagePath}/og.png`) : fallbackImage;
-	const ogImage = imagePath.startsWith('http') ? imagePath : `${baseUrl}${imagePath}`;
+	const ogImage = post
+		? getPostImageUrl(post, baseUrl)
+		: fallbackImage.startsWith('http')
+			? fallbackImage
+			: `${baseUrl}${fallbackImage}`;
 
 	const og: OgMeta = {
 		title: pageTitle,
@@ -66,7 +75,7 @@ export function buildSeo(options: {
 		siteName: siteConfig.title,
 		...(post && {
 			publishedTime: new Date(post.publishedAt).toISOString(),
-			modifiedTime: new Date(post.publishedAt).toISOString(),
+			...(post.updatedAt && { modifiedTime: new Date(post.updatedAt).toISOString() }),
 			author: siteConfig.author,
 			tags: post.tags,
 		}),
@@ -124,7 +133,7 @@ export function buildSeo(options: {
 						image: ogImage,
 						keywords: post.tags.join(', '),
 						datePublished: new Date(post.publishedAt).toISOString(),
-						dateModified: new Date(post.publishedAt).toISOString(),
+						...(post.updatedAt && { dateModified: new Date(post.updatedAt).toISOString() }),
 						author: {
 							'@type': 'Person',
 							name: siteConfig.author,

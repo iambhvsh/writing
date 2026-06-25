@@ -29,6 +29,7 @@ interface NormalizedPostMetadata {
 	title: string;
 	description: string;
 	publishedAt: string;
+	updatedAt?: string;
 	tags: string[];
 	cover?: string;
 	coverAlt?: string;
@@ -45,10 +46,18 @@ function parseContentMetrics(content: string): {
 } {
 	// Strip frontmatter
 	let plainText = content.replace(/^---[\s\S]*?---/, '');
-	// Remove HTML tags
-	plainText = plainText.replace(/<[^>]*>/g, '');
+	// Remove HTML tags (repeat until stable to avoid incomplete multi-character sanitization)
+	let previous: string;
+	do {
+		previous = plainText;
+		plainText = plainText.replace(/<[^>]*>/g, '');
+	} while (plainText !== previous);
+	// Keep only human-readable text from markdown links/images
+	plainText = plainText
+		.replace(/!\[([^\]]*)\]\([^)]+\)/g, '$1')
+		.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
 	// Remove markdown formatting but keep the readable text
-	plainText = plainText.replace(/[#>*_[\]()~-]/g, ' ');
+	plainText = plainText.replace(/[`#>*_[\]()~-]/g, ' ');
 	// Replace entities
 	plainText = plainText.replace(/&[a-z\d#]+;/gi, ' ');
 	// Normalize whitespace
@@ -157,6 +166,10 @@ function readPostMetadata(path: string, metadata: unknown): NormalizedPostMetada
 		tags: readTags(path, frontmatter.tags),
 	};
 
+	if (frontmatter.updatedAt !== undefined) {
+		normalized.updatedAt = readPublishedAt(path, frontmatter.updatedAt);
+	}
+
 	if (frontmatter.cover !== undefined) normalized.cover = frontmatter.cover;
 	if (frontmatter.coverAlt !== undefined) normalized.coverAlt = frontmatter.coverAlt;
 
@@ -181,6 +194,8 @@ function buildPost(
 		plainText: metrics.plainText,
 		wordCount: metrics.wordCount,
 	};
+
+	if (frontmatter.updatedAt !== undefined) post.updatedAt = frontmatter.updatedAt;
 
 	if (cover !== undefined) post.cover = cover;
 	if (frontmatter.coverAlt !== undefined) post.coverAlt = frontmatter.coverAlt;
