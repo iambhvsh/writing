@@ -1,7 +1,7 @@
 ---
 title: "Day 2: Thinking in Swift"
 description: "Today I explored Booleans, string interpolation, expressions, and completed my first Swift checkpoint by building a Celsius to Fahrenheit converter."
-publishedAt: 2026-06-21
+publishedAt: 2026-06-25
 tags: Swift, Swift Language, Apple Development, Swift Basics, iOS Development, Learning in Public, 100 Days of SwiftUI, Programming
 coverImage: "./cover.jpg"
 coverAlt: "Swift code demonstrating Booleans, string interpolation, and a temperature conversion program"
