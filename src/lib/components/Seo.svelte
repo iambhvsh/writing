@@ -13,7 +13,14 @@
 <svelte:head>
 	<title>{seo.title}</title>
 	<meta name="description" content={seo.description} />
+	<meta
+		name="robots"
+		content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+	/>
 	<link rel="canonical" href={seo.canonical} />
+	<link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml" />
+	<link rel="manifest" href="/manifest.webmanifest" />
+
 	<meta property="og:title" content={seo.og.title} />
 	<meta property="og:description" content={seo.og.description} />
 	<meta property="og:url" content={seo.og.url} />
@@ -23,6 +30,9 @@
 	<meta property="og:site_name" content={seo.og.siteName} />
 	{#if seo.og.publishedTime}
 		<meta property="article:published_time" content={seo.og.publishedTime} />
+	{/if}
+	{#if seo.og.modifiedTime}
+		<meta property="article:modified_time" content={seo.og.modifiedTime} />
 	{/if}
 	{#if seo.og.author}
 		<meta property="article:author" content={seo.og.author} />

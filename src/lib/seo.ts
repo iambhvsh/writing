@@ -19,6 +19,7 @@ interface OgMeta {
 	imageAlt: string;
 	siteName: string;
 	publishedTime?: string;
+	modifiedTime?: string;
 	author?: string;
 	tags?: string[];
 }
@@ -34,6 +35,12 @@ interface TwitterMeta {
 
 function serializeJsonLd(value: unknown): string {
 	return JSON.stringify(value).replace(/</g, '\\u003c');
+}
+
+export function getPostImageUrl(post: Post, baseUrl: string): string {
+	const normalizedBase = baseUrl.replace(/\/$/, '');
+	const imagePath = post.cover ?? `/${post.slug}/og.png`;
+	return imagePath.startsWith('http') ? imagePath : `${normalizedBase}${imagePath}`;
 }
 
 export function buildSeo(options: {
@@ -52,8 +59,11 @@ export function buildSeo(options: {
 	const pagePath = path.startsWith('/') ? path : `/${path}`;
 	const canonical = `${baseUrl}${pagePath}`;
 	const fallbackImage = siteConfig.ogImage ?? '/og.png';
-	const imagePath = post ? (post.cover ?? `${pagePath}/og.png`) : fallbackImage;
-	const ogImage = imagePath.startsWith('http') ? imagePath : `${baseUrl}${imagePath}`;
+	const ogImage = post
+		? getPostImageUrl(post, baseUrl)
+		: fallbackImage.startsWith('http')
+			? fallbackImage
+			: `${baseUrl}${fallbackImage}`;
 
 	const og: OgMeta = {
 		title: pageTitle,
@@ -65,6 +75,7 @@ export function buildSeo(options: {
 		siteName: siteConfig.title,
 		...(post && {
 			publishedTime: new Date(post.publishedAt).toISOString(),
+			...(post.updatedAt && { modifiedTime: new Date(post.updatedAt).toISOString() }),
 			author: siteConfig.author,
 			tags: post.tags,
 		}),
@@ -81,40 +92,85 @@ export function buildSeo(options: {
 		}),
 	};
 
+	const publisherLogo = {
+		'@type': 'ImageObject',
+		url: `${baseUrl}/og.png`,
+	};
+
+	const organizationSchema = {
+		'@context': 'https://schema.org',
+		'@type': 'Organization',
+		name: siteConfig.title,
+		url: baseUrl,
+		logo: publisherLogo,
+		image: `${baseUrl}/og.png`,
+		description: siteConfig.description,
+		founder: {
+			'@type': 'Person',
+			name: siteConfig.author,
+			url: siteConfig.authorUrl,
+		},
+		sameAs: [siteConfig.authorUrl],
+	};
+
 	const jsonLd = serializeJsonLd(
 		post
-			? {
-					'@context': 'https://schema.org',
-					'@type': 'BlogPosting',
-					headline: post.title,
-					description: post.description,
-					author: {
-						'@type': 'Person',
-						name: siteConfig.author,
-						url: siteConfig.authorUrl,
+			? [
+					{
+						'@context': 'https://schema.org',
+						'@type': 'BlogPosting',
+						mainEntityOfPage: {
+							'@type': 'WebPage',
+							'@id': canonical,
+						},
+						headline: post.title,
+						description: post.description,
+						articleBody: post.plainText,
+						wordCount: post.wordCount,
+						inLanguage: 'en-US',
+						isAccessibleForFree: true,
+						url: canonical,
+						image: ogImage,
+						keywords: post.tags.join(', '),
+						datePublished: new Date(post.publishedAt).toISOString(),
+						...(post.updatedAt && { dateModified: new Date(post.updatedAt).toISOString() }),
+						author: {
+							'@type': 'Person',
+							name: siteConfig.author,
+							url: siteConfig.authorUrl,
+						},
+						publisher: organizationSchema,
 					},
-					datePublished: new Date(post.publishedAt).toISOString(),
-					url: canonical,
-					image: ogImage,
-					keywords: post.tags.join(', '),
-					publisher: {
-						'@type': 'Organization',
+					{
+						'@context': 'https://schema.org',
+						'@type': 'BreadcrumbList',
+						itemListElement: [
+							{
+								'@type': 'ListItem',
+								position: 1,
+								name: 'Home',
+								item: baseUrl,
+							},
+							{
+								'@type': 'ListItem',
+								position: 2,
+								name: post.title,
+								item: canonical,
+							},
+						],
+					},
+				]
+			: [
+					{
+						'@context': 'https://schema.org',
+						'@type': 'WebSite',
 						name: siteConfig.title,
+						description: siteConfig.description,
 						url: baseUrl,
+						inLanguage: 'en-US',
 					},
-				}
-			: {
-					'@context': 'https://schema.org',
-					'@type': 'WebSite',
-					name: siteConfig.title,
-					description: siteConfig.description,
-					url: baseUrl,
-					author: {
-						'@type': 'Person',
-						name: siteConfig.author,
-						url: siteConfig.authorUrl,
-					},
-				}
+					organizationSchema,
+				]
 	);
 
 	return {
