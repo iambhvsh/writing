@@ -1,0 +1,354 @@
+---
+title: "Day 3: Understanding Collection Types and Enums in Swift"
+description: "Today I learned Swift's collection types including arrays, dictionaries, sets, and enumerations. I explored how Swift organizes data, why different collection types exist, and how enums make code safer and easier to read."
+publishedAt: 2026-06-26
+tags: Swift, Swift Programming, Swift Tutorial, SwiftUI, iOS Development, Apple Development
+coverImage: "./cover.jpg"
+coverAlt: "Swift code demonstrating arrays, dictionaries, sets, and enumerations"
+---
+
+## Organizing Data Instead of Just Storing It
+
+The first two days were focused on learning Swift's basic building blocks.
+
+Variables.
+
+Constants.
+
+Strings.
+
+Booleans.
+
+Today felt different.
+
+Instead of learning new data types, I learned how Swift organizes information.
+
+As programs become larger, storing a single value isn't enough.
+
+Sometimes you need a list of names.
+
+Sometimes you need to look up information using a key.
+
+Sometimes duplicate values don't make sense.
+
+And sometimes a value should only ever be one of a fixed number of choices.
+
+Swift has different collection types for each of those situations.
+
+Understanding when to use each one was easily the biggest lesson of today.
+
+## Arrays: Ordered Collections
+
+The first collection type I explored was the array.
+
+Arrays store multiple values while preserving the order they were added.
+
+```swift
+var names = [
+    "Steve Jobs",
+    "Steve Wozniak",
+    "Tim Cook",
+    "Elon Musk"
+]
+```
+
+Accessing values is straightforward.
+
+```swift
+print(names[0])
+```
+
+Arrays use zero-based indexing, so the first element is always at index `0`.
+
+Along the way I experimented with a number of built-in array methods.
+
+Adding values:
+
+```swift
+names.append("Sundar Pichai")
+```
+
+Counting values:
+
+```swift
+print(names.count)
+```
+
+Searching:
+
+```swift
+print(names.contains("Tim Cook"))
+```
+
+Removing values:
+
+```swift
+names.remove(at: 2)
+```
+
+Clearing everything:
+
+```swift
+names.removeAll()
+```
+
+What stood out was how descriptive Swift's API is.
+
+Methods like `append()`, `contains()`, and `removeAll()` explain exactly what they're doing.
+
+There's very little guesswork.
+
+## Learning That Arrays Have Types
+
+One interesting thing I learned is that arrays aren't limited to integers.
+
+Swift can infer the type automatically.
+
+```swift
+var temperatures = [23.4, 26.8, 31.5]
+```
+
+Or I can declare the type explicitly.
+
+```swift
+var people: [String] = []
+```
+
+I also discovered two equivalent ways of creating empty arrays.
+
+```swift
+var characters = Array<String>()
+```
+
+and
+
+```swift
+var characters = [String]()
+```
+
+The second version is simply shorthand.
+
+Both create exactly the same type of array.
+
+## Sorting and Reversing
+
+Swift also provides methods for organizing data.
+
+Sorting an array is as simple as:
+
+```swift
+print(alphabets.sorted())
+```
+
+One thing that confused me initially was `reversed()`.
+
+```swift
+print(alphabets.reversed())
+```
+
+Instead of printing a reversed array, Swift returned a `ReversedCollection`.
+
+After learning why, it actually made sense.
+
+Rather than creating an entirely new array immediately, Swift returns a lightweight view over the original collection.
+
+If I really want a new array, I can convert it.
+
+```swift
+print(Array(alphabets.reversed()))
+```
+
+Small implementation details like this show that Swift often favors efficiency alongside readability.
+
+## Dictionaries: Looking Up Information
+
+The next collection type was dictionaries.
+
+Unlike arrays, dictionaries don't use numeric indexes.
+
+Instead, they store values using keys.
+
+```swift
+let truth = [
+    "Swift is fast": true,
+    "Swift is easy": true
+]
+```
+
+Accessing a value looks like this.
+
+```swift
+print(truth["Swift is fast"])
+```
+
+I also learned that dictionary lookups return optional values because a key may not exist.
+
+Providing a default value avoids dealing with missing keys.
+
+```swift
+print(truth["Swift is fast", default: false])
+```
+
+One mistake I made during today's lesson was trying to store multiple singers inside a single dictionary using identical keys.
+
+```swift
+[
+    "Name": "...",
+    "Name": "..."
+]
+```
+
+Swift simply replaces the earlier value because dictionary keys must always be unique.
+
+The correct solution was using an array of dictionaries.
+
+```swift
+let singers = [
+    [
+        "Name": "Elizabeth Woolridge",
+        "Nickname": "Lana Del Rey"
+    ],
+    [
+        "Name": "Taylor Swift",
+        "Nickname": "Taylor"
+    ]
+]
+```
+
+That was a good reminder that choosing the right data structure is just as important as writing the code itself.
+
+## Sets: Unique Values Only
+
+Sets felt similar to arrays at first.
+
+The biggest difference is that sets automatically remove duplicate values.
+
+```swift
+var breeds = Set<String>()
+
+breeds.insert("Labrador")
+breeds.insert("Labrador")
+breeds.insert("German Shepherd")
+```
+
+Even though `"Labrador"` was inserted twice, it only appears once.
+
+Another important characteristic is that sets don't preserve order.
+
+If ordering matters, arrays are the better choice.
+
+If uniqueness and fast lookups matter, sets are often the better option.
+
+It's another example of Swift providing specialized tools for different situations.
+
+## Enums: Fixed Choices
+
+The final topic today was enumerations, usually shortened to enums.
+
+Enums define a fixed set of possible values.
+
+```swift
+enum Weekday {
+    case monday
+    case tuesday
+    case wednesday
+    case thursday
+    case friday
+    case saturday
+    case sunday
+}
+```
+
+Instead of using strings everywhere, Swift lets you work with meaningful values.
+
+```swift
+var day = Weekday.monday
+
+day = .friday
+```
+
+I also learned about raw values.
+
+```swift
+enum Singer: String {
+    case taylorSwift = "Taylor Swift"
+}
+```
+
+This allows me to access either the enum case itself.
+
+```swift
+Singer.taylorSwift
+```
+
+or its underlying string.
+
+```swift
+Singer.taylorSwift.rawValue
+```
+
+Enums already feel like they'll become incredibly useful once I start building real applications.
+
+## Debugging Taught Me As Much As Coding
+
+Today's lesson wasn't only about new features.
+
+It also involved fixing several mistakes.
+
+I accidentally redeclared variables.
+
+I misunderstood how dictionaries store multiple objects.
+
+I discovered why `reversed()` doesn't immediately return an array.
+
+I even learned that enum cases can't contain spaces and that commas inside enum declarations follow different rules than I initially expected.
+
+Every error ended up teaching me something new about how Swift works.
+
+## A Bigger Picture Is Starting to Form
+
+After three days, Swift feels very intentional.
+
+Arrays solve one problem.
+
+Dictionaries solve another.
+
+Sets solve another.
+
+Enums prevent invalid values entirely.
+
+Rather than trying to make one data structure handle every situation, Swift provides specialized tools for different kinds of data.
+
+That makes code easier to understand and much safer to work with.
+
+I'm beginning to see that learning Swift isn't just about memorizing syntax.
+
+It's about learning which tool fits which problem.
+
+## Looking Ahead
+
+Three days in, and I still haven't built a user interface.
+
+No SwiftUI.
+
+No views.
+
+No buttons.
+
+Just the language.
+
+Surprisingly, I'm enjoying that.
+
+Each day builds another layer of understanding, and it already feels much easier to read Swift code than it did when I started.
+
+I'm excited to see how these collection types eventually fit into real apps.
+
+Three days down.
+
+Ninety-seven to go.
+
+## Day 3 Code
+
+The complete code from today's learning session is available here:
+
+- [collection-types.swift](./collection-types.swift)
