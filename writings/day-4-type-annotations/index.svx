@@ -1,0 +1,255 @@
+---
+title: "Day 4: Understanding Types in Swift"
+description: "Today I explored Swift's type annotations, learned when explicit types improve clarity, created empty collections, revisited enums, and completed a checkpoint using sets to remove duplicate values."
+publishedAt: 2026-06-29
+tags: Swift, Swift Programming, Swift Tutorial, SwiftUI, iOS Development, Apple Development
+coverImage: "./cover.jpg"
+coverAlt: "Swift code demonstrating type annotations, empty collections, enums, and sets"
+---
+
+## Back Where I Left Off
+
+I wasn't able to practice Swift every day over the past few days.
+
+Life got busy, and that's okay.
+
+Today I finally sat back down, opened my editor, and continued where I left off.
+
+Rather than introducing a brand-new language feature, today's lesson focused on something that's present in almost every line of Swift code: **types**.
+
+It's one of those topics that seems simple at first, but the more I learned, the more I realized how much thought has gone into Swift's design.
+
+## Swift Usually Knows What You Mean
+
+One of my favorite things about Swift is that it doesn't ask you to repeat yourself.
+
+When I write this:
+
+```swift
+let fullName = "Elizabeth Woolridge"
+```
+
+Swift immediately understands that `fullName` is a `String`.
+
+The same happens with numbers.
+
+```swift
+let randomNumber = 566
+```
+
+Swift knows it's an `Int`.
+
+There's no extra syntax and no unnecessary declarations.
+
+The compiler simply understands what I'm trying to express.
+
+That makes the language feel lightweight without sacrificing safety.
+
+## Being Explicit Has Its Place
+
+Of course, Swift can't always know what I intend.
+
+Sometimes I know more than the compiler does.
+
+For example:
+
+```swift
+let score: Double = 0
+```
+
+Even though the value is `0`, I know that a score could eventually become `95.5` or `99.75`.
+
+If I didn't specify `Double`, Swift would create an `Int` instead.
+
+That small annotation communicates my intent immediately.
+
+Today's lesson taught me that type annotations aren't about writing more code.
+
+They're about making the code say exactly what it means.
+
+## Empty Collections Need Direction
+
+Type inference works because Swift can inspect existing values.
+
+An empty collection has nothing to inspect.
+
+Without any values, Swift can't determine what kind of collection I want to create.
+
+That's why this works:
+
+```swift
+let songs: [String] = []
+```
+
+And this works too:
+
+```swift
+let featuredAlbums = [String]()
+```
+
+Both create an empty array of strings.
+
+The same idea applies to dictionaries.
+
+```swift
+let ages = [String: Int]()
+```
+
+Since there are no keys or values yet, Swift relies on the type annotation to understand what the collection will eventually store.
+
+It was a small lesson, but one that made the compiler's behavior much easier to understand.
+
+## Collections Still Feel Purpose-Built
+
+To reinforce everything I'd learned over the past few days, I also created a few different collections.
+
+An array of numbers.
+
+```swift
+let luckyNumbers: [Int] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+```
+
+An array of Lana Del Rey albums.
+
+```swift
+let lanaAlbums: [String] = [
+    "Lust for Life",
+    "Born to Die",
+    "Ultraviolence",
+    "Honeymoon",
+    "Chemtrails Over the Country Club"
+]
+```
+
+And a set containing some of my favorite Lana Del Rey songs.
+
+```swift
+let lanaSongs: Set<String> = [
+    "Born to Die",
+    "Video Games",
+    "Chemtrails Over the Country Club",
+    "Margaret",
+    "Say Yes To Heaven"
+]
+```
+
+The more I work with Swift's collections, the more I appreciate that each one exists for a different purpose.
+
+Arrays preserve order.
+
+Sets guarantee uniqueness.
+
+Dictionaries provide fast lookups.
+
+Instead of trying to solve every problem with one collection type, Swift encourages choosing the one that best fits the data.
+
+## Revisiting Enums
+
+Today's lesson also brought enums back into the picture.
+
+```swift
+enum ThemeColor {
+    case red
+    case orange
+    case blue
+    case yellow
+}
+```
+
+Creating an enum value feels straightforward.
+
+```swift
+var currentTheme = ThemeColor.blue
+```
+
+What I like even more is Swift's shorthand syntax.
+
+```swift
+currentTheme = .red
+```
+
+Because the compiler already knows that `currentTheme` is a `ThemeColor`, there's no need to repeat the type.
+
+It's a small detail, but it keeps the code clean and easy to read.
+
+That's something I'm starting to notice throughout the language.
+
+Swift often removes repetition without making the code harder to understand.
+
+## A Small Checkpoint
+
+To finish today's lesson, I completed another checkpoint.
+
+The challenge was simple.
+
+Create an array of strings, then write some code that prints the number of items in the array and also the number of unique items in the array.
+
+```swift
+let singers = [
+    "Lana Del Rey",
+    "Taylor Swift",
+    "Billie Eilish",
+    "Lana Del Rey",
+    "Joe Keery",
+    "Lord Huron",
+    "Lord Huron"
+]
+
+print("Total singers: \(singers.count)")
+
+let uniqueSingers = Set(singers)
+
+print("Unique singers: \(uniqueSingers.count)")
+```
+
+I actually got stuck for a moment.
+
+When I read "unique items," my first thought was to create another array.
+
+It didn't click immediately that a `Set` was exactly what Swift had designed for this kind of problem.
+
+The moment I converted the array into a set, the duplicates disappeared automatically.
+
+It was a small reminder that understanding the available tools is often more valuable than writing more code.
+
+## Understanding the Language, Not Just the Syntax
+
+Every lesson so far has made one thing increasingly clear.
+
+Learning Swift isn't about memorizing keywords.
+
+It's about understanding why the language behaves the way it does.
+
+Today wasn't filled with flashy features or complicated algorithms.
+
+Instead, it helped me understand how Swift thinks.
+
+When it can infer information.
+
+When it needs guidance.
+
+And when being explicit makes code easier for both the compiler and other developers to understand.
+
+Those aren't the kinds of lessons that produce exciting screenshots.
+
+But they quietly build the foundation for everything that comes next.
+
+## Looking Ahead
+
+Four days into learning Swift, I'm beginning to notice a pattern.
+
+Every feature feels intentional.
+
+Swift tries to reduce unnecessary code without hiding important details.
+
+It gives me sensible defaults while still allowing me to be explicit whenever I need to.
+
+The more I learn, the more I appreciate that balance.
+
+I'm still a long way from building polished apps, but every lesson makes the language feel a little more familiar than it did yesterday.
+
+## Day 4 Code
+
+The complete code from today's learning session is available here:
+
+* [type-annotations.swift](./type-annotations.swift)
