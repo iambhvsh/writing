@@ -39,13 +39,22 @@ function slugFromPath(path: string): string {
 	return path.replace(WRITINGS_ROOT, '').replace(/\/index\.(svx|md)$/, '');
 }
 
+function extractMarkdownBody(content: string): string {
+	if (content.startsWith('---')) {
+		const end = content.indexOf('\n---', 3);
+		if (end !== -1) {
+			return content.substring(end + 4).trim();
+		}
+	}
+	return content.trim();
+}
+
 function parseContentMetrics(content: string): {
 	plainText: string;
 	wordCount: number;
 	readingTime: number;
 } {
-	// Strip frontmatter
-	let plainText = content.replace(/^---[\s\S]*?---/, '');
+	let plainText = extractMarkdownBody(content);
 	// Remove HTML tags (repeat until stable to avoid incomplete multi-character sanitization)
 	let previous: string;
 	do {
@@ -179,7 +188,7 @@ function readPostMetadata(path: string, metadata: unknown): NormalizedPostMetada
 function buildPost(
 	path: string,
 	metadata: unknown,
-	metrics: { plainText: string; wordCount: number; readingTime: number }
+	metrics: { plainText: string; wordCount: number; readingTime: number; rawContent: string }
 ): Post {
 	const frontmatter = readPostMetadata(path, metadata);
 	const cover = resolveCover(path, frontmatter.cover);
@@ -193,6 +202,7 @@ function buildPost(
 		readingTime: metrics.readingTime,
 		plainText: metrics.plainText,
 		wordCount: metrics.wordCount,
+		body: extractMarkdownBody(metrics.rawContent),
 	};
 
 	if (frontmatter.updatedAt !== undefined) post.updatedAt = frontmatter.updatedAt;
@@ -211,8 +221,8 @@ export async function getAllPosts(): Promise<Post[]> {
 
 		const rawContent = await getRawContent(path);
 		const metrics = rawContent
-			? parseContentMetrics(rawContent)
-			: { plainText: '', wordCount: 0, readingTime: 1 };
+			? { ...parseContentMetrics(rawContent), rawContent }
+			: { plainText: '', wordCount: 0, readingTime: 1, rawContent: '' };
 		posts.push(buildPost(path, mod.metadata, metrics));
 	}
 
@@ -235,8 +245,8 @@ export async function getPost(slug: string): Promise<{
 
 	const rawContent = await getRawContent(path in modules ? path : mdPath);
 	const metrics = rawContent
-		? parseContentMetrics(rawContent)
-		: { plainText: '', wordCount: 0, readingTime: 1 };
+		? { ...parseContentMetrics(rawContent), rawContent }
+		: { plainText: '', wordCount: 0, readingTime: 1, rawContent: '' };
 	const postData = buildPost(path in modules ? path : mdPath, mod.metadata, metrics);
 
 	return {

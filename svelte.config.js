@@ -2,12 +2,7 @@ import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { mdsvex, escapeSvelte } from 'mdsvex';
 import { createHighlighter } from 'shiki';
-import remarkToc from 'remark-toc';
-import rehypeSlug from 'rehype-slug';
-import rehypeUnwrapImages from 'rehype-unwrap-images';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import remarkRelativeAssets from './src/lib/assets.ts';
-import { visit } from 'unist-util-visit';
+import { sharedRemarkPlugins, sharedRehypePlugins } from './src/lib/markdown.ts';
 
 const DEFAULT_SITE_URL = 'https://writing.iambhvsh.in';
 
@@ -53,57 +48,6 @@ const highlighter = await createHighlighter({
 	]
 });
 
-function remarkTableOfContentsHeading() {
-	return (tree) => {
-		const isTocHeading = (node) =>
-			node.type === 'heading' &&
-			node.depth === 2 &&
-			node.children.some(
-				(child) => child.type === 'text' && child.value.toLowerCase() === 'table of contents'
-			);
-
-		tree.children = tree.children.filter((node, index, children) => {
-			if (isTocHeading(node)) return false;
-			if (node.type === 'list' && index > 0 && isTocHeading(children[index - 1])) return false;
-			return true;
-		});
-
-		tree.children.unshift({
-			type: 'heading',
-			depth: 2,
-			children: [{ type: 'text', value: 'Table of Contents' }]
-		});
-	};
-}
-
-function rehypeFigure() {
-	return (tree) => {
-		visit(tree, 'element', (node, index, parent) => {
-			if (node.tagName === 'img' && parent?.type === 'root' && index !== undefined) {
-				const alt = typeof node.properties?.alt === 'string' ? node.properties.alt : '';
-
-				const figure = {
-					type: 'element',
-					tagName: 'figure',
-					properties: {},
-					children: [node]
-				};
-
-				if (alt.trim() !== '') {
-					figure.children.push({
-						type: 'element',
-						tagName: 'figcaption',
-						properties: {},
-						children: [{ type: 'text', value: alt }]
-					});
-				}
-
-				parent.children[index] = figure;
-			}
-		});
-	};
-}
-
 /** @type {import('mdsvex').MdsvexOptions} */
 const mdsvexOptions = {
 	extensions: ['.svx', '.md'],
@@ -113,12 +57,8 @@ const mdsvexOptions = {
 			return `{@html \`${html}\`}`;
 		}
 	},
-	remarkPlugins: [
-		remarkRelativeAssets,
-		remarkTableOfContentsHeading,
-		[remarkToc, { tight: true, ordered: false }]
-	],
-	rehypePlugins: [rehypeUnwrapImages, rehypeFigure, rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }]]
+	remarkPlugins: sharedRemarkPlugins,
+	rehypePlugins: sharedRehypePlugins
 };
 
 /** @type {import('@sveltejs/kit').Config} */

@@ -10,6 +10,7 @@ export interface Post {
 	readingTime: number;
 	plainText: string;
 	wordCount: number;
+	body: string;
 }
 
 export interface SiteConfig {
@@ -20,4 +21,5 @@ export interface SiteConfig {
 	authorUrl: string;
 	twitter?: string;
 	ogImage?: string;
+	rssLimit?: number;
 }

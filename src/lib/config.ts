@@ -8,4 +8,5 @@ export const siteConfig = {
 	authorUrl: 'https://iambhvsh.in',
 	twitter: '@iambhvsh',
 	ogImage: '/og.png',
+	rssLimit: 20,
 } satisfies SiteConfig;
