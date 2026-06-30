@@ -6,10 +6,12 @@ export interface Post {
 	updatedAt?: string;
 	tags: string[];
 	cover?: string;
+	coverSourcePath?: string;
 	coverAlt?: string;
 	readingTime: number;
 	plainText: string;
 	wordCount: number;
+	body: string;
 }
 
 export interface SiteConfig {
@@ -18,6 +20,8 @@ export interface SiteConfig {
 	url: string;
 	author: string;
 	authorUrl: string;
+	email?: string;
 	twitter?: string;
 	ogImage?: string;
+	rssLimit?: number;
 }

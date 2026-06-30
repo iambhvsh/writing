@@ -39,13 +39,20 @@ function slugFromPath(path: string): string {
 	return path.replace(WRITINGS_ROOT, '').replace(/\/index\.(svx|md)$/, '');
 }
 
+function extractMarkdownBody(content: string): string {
+	if (content.startsWith('---')) {
+		const match = /^---\r?\n[\s\S]*?\r?\n---(?:\r?\n|$)/.exec(content);
+		if (match) return content.slice(match[0].length);
+	}
+	return content;
+}
+
 function parseContentMetrics(content: string): {
 	plainText: string;
 	wordCount: number;
 	readingTime: number;
 } {
-	// Strip frontmatter
-	let plainText = content.replace(/^---[\s\S]*?---/, '');
+	let plainText = extractMarkdownBody(content).trim();
 	// Remove HTML tags (repeat until stable to avoid incomplete multi-character sanitization)
 	let previous: string;
 	do {
@@ -74,23 +81,27 @@ async function getRawContent(path: string): Promise<string> {
 	return loader ? ((await loader()) as string) : '';
 }
 
-function resolveCover(path: string, cover: string | undefined): string | undefined {
-	if (cover && (/^(https?:)?\/\//.test(cover) || cover.startsWith('/'))) return cover;
+function resolveCover(
+	path: string,
+	cover: string | undefined
+): { url: string | undefined; source: string | undefined } {
+	if (cover && (/^(https?:)?\/\//.test(cover) || cover.startsWith('/')))
+		return { url: cover, source: undefined };
 
 	const postDir = path.replace(/\/index\.(svx|md)$/, '');
 
 	if (cover) {
 		const coverPath = `${postDir}/${cover.replace(/^\.\//, '')}`.replace(/\/+/g, '/');
-		return imageModules[coverPath] as string | undefined;
+		return { url: imageModules[coverPath] as string | undefined, source: coverPath };
 	}
 
 	for (const extension of ['avif', 'webp', 'png', 'jpg', 'jpeg']) {
 		const coverPath = `${postDir}/cover.${extension}`;
 		const resolvedCover = imageModules[coverPath] as string | undefined;
-		if (resolvedCover) return resolvedCover;
+		if (resolvedCover) return { url: resolvedCover, source: coverPath };
 	}
 
-	return undefined;
+	return { url: undefined, source: undefined };
 }
 
 function isStringArray(value: unknown): value is string[] {
@@ -179,10 +190,10 @@ function readPostMetadata(path: string, metadata: unknown): NormalizedPostMetada
 function buildPost(
 	path: string,
 	metadata: unknown,
-	metrics: { plainText: string; wordCount: number; readingTime: number }
+	metrics: { plainText: string; wordCount: number; readingTime: number; rawContent: string }
 ): Post {
 	const frontmatter = readPostMetadata(path, metadata);
-	const cover = resolveCover(path, frontmatter.cover);
+	const { url: coverUrl, source: coverSourcePath } = resolveCover(path, frontmatter.cover);
 
 	const post: Post = {
 		slug: slugFromPath(path),
@@ -193,11 +204,13 @@ function buildPost(
 		readingTime: metrics.readingTime,
 		plainText: metrics.plainText,
 		wordCount: metrics.wordCount,
+		body: extractMarkdownBody(metrics.rawContent),
 	};
 
 	if (frontmatter.updatedAt !== undefined) post.updatedAt = frontmatter.updatedAt;
 
-	if (cover !== undefined) post.cover = cover;
+	if (coverUrl !== undefined) post.cover = coverUrl;
+	if (coverSourcePath !== undefined) post.coverSourcePath = coverSourcePath;
 	if (frontmatter.coverAlt !== undefined) post.coverAlt = frontmatter.coverAlt;
 
 	return post;
@@ -211,8 +224,8 @@ export async function getAllPosts(): Promise<Post[]> {
 
 		const rawContent = await getRawContent(path);
 		const metrics = rawContent
-			? parseContentMetrics(rawContent)
-			: { plainText: '', wordCount: 0, readingTime: 1 };
+			? { ...parseContentMetrics(rawContent), rawContent }
+			: { plainText: '', wordCount: 0, readingTime: 1, rawContent: '' };
 		posts.push(buildPost(path, mod.metadata, metrics));
 	}
 
@@ -235,8 +248,8 @@ export async function getPost(slug: string): Promise<{
 
 	const rawContent = await getRawContent(path in modules ? path : mdPath);
 	const metrics = rawContent
-		? parseContentMetrics(rawContent)
-		: { plainText: '', wordCount: 0, readingTime: 1 };
+		? { ...parseContentMetrics(rawContent), rawContent }
+		: { plainText: '', wordCount: 0, readingTime: 1, rawContent: '' };
 	const postData = buildPost(path in modules ? path : mdPath, mod.metadata, metrics);
 
 	return {
