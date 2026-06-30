@@ -100,11 +100,10 @@ export const GET: RequestHandler = async () => {
     <description>${xmlCdata(siteConfig.description)}</description>
     <link>${xmlText(siteConfig.url)}</link>
     <atom:link href="${xmlText(`${siteConfig.url}/rss.xml`)}" rel="self" type="application/rss+xml"/>
-    <language>en-us</language>
+    <language>en-US</language>
     <lastBuildDate>${lastBuildDate}</lastBuildDate>
-    <generator>Writing RSS Generator (SvelteKit)</generator>
     <docs>https://www.rssboard.org/rss-specification</docs>
-    <ttl>60</ttl>
+    <ttl>360</ttl>
     <copyright>${xmlText(`© ${new Date().getFullYear().toString()} ${siteConfig.author}`)}</copyright>
     <managingEditor>${xmlText(`${siteConfig.email} (${siteConfig.author})`)}</managingEditor>
     <webMaster>${xmlText(`${siteConfig.email} (${siteConfig.author})`)}</webMaster>
