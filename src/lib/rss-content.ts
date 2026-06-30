@@ -10,21 +10,23 @@ import type { Root as HastRoot, Element as HastElement } from 'hast';
 
 function rehypeAbsoluteUrls(options: { slug: string }) {
 	return (tree: HastRoot) => {
+		// Ensure baseUrl always has a trailing slash for correct relative resolution
+		const siteUrl = siteConfig.url.endsWith('/') ? siteConfig.url : `${siteConfig.url}/`;
+		const baseUrl = new URL(`${options.slug}/`, siteUrl).href;
+
 		visit(tree, 'element', (node: HastElement) => {
-			if (node.tagName === 'a' && node.properties?.href) {
-				const href = String(node.properties.href);
-				if (href.startsWith('./') || href.startsWith('../') || (!href.startsWith('http') && !href.startsWith('#') && !href.startsWith('/'))) {
-					node.properties.href = `${siteConfig.url}/${options.slug}/${href.replace(/^\.\//, '')}`;
-				} else if (href.startsWith('/')) {
-					node.properties.href = `${siteConfig.url}${href}`;
+			if (node.tagName === 'a' && typeof node.properties?.href === 'string') {
+				try {
+					node.properties.href = new URL(node.properties.href, baseUrl).href;
+				} catch {
+					// Ignore invalid URLs
 				}
 			}
-			if (node.tagName === 'img' && node.properties?.src) {
-				const src = String(node.properties.src);
-				if (src.startsWith('./') || src.startsWith('../') || (!src.startsWith('http') && !src.startsWith('/'))) {
-					node.properties.src = `${siteConfig.url}/${options.slug}/${src.replace(/^\.\//, '')}`;
-				} else if (src.startsWith('/')) {
-					node.properties.src = `${siteConfig.url}${src}`;
+			if (node.tagName === 'img' && typeof node.properties?.src === 'string') {
+				try {
+					node.properties.src = new URL(node.properties.src, baseUrl).href;
+				} catch {
+					// Ignore invalid URLs
 				}
 			}
 		});
