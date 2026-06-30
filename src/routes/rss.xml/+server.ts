@@ -30,15 +30,14 @@ function getMimeType(filePath: string): string {
 
 async function getEnclosureLength(filePath: string): Promise<string | null> {
 	try {
-		const fullPath = path.join(process.cwd(), filePath);
-		const stat = await fs.stat(fullPath);
+		const stat = await fs.stat(filePath);
 		return stat.size.toString();
 	} catch {
 		return null;
 	}
 }
 
-function truncateDescription(text: string, length = 160): string {
+function truncateDescription(text: string, length = 155): string {
 	if (text.length <= length) return text;
 	const lastSpace = text.lastIndexOf(' ', length);
 	return lastSpace > 0 ? text.slice(0, lastSpace) + '…' : text.slice(0, length) + '…';
@@ -59,29 +58,22 @@ export const GET: RequestHandler = async () => {
 			let enclosure = '';
 
 			if (post.coverSourcePath) {
-				const testPath = '.' + post.coverSourcePath;
+				const testPath = path.resolve(process.cwd(), '.' + post.coverSourcePath);
 				const length = await getEnclosureLength(testPath);
 				if (length) {
-					const type = getMimeType(testPath);
+					const type = getMimeType(post.coverSourcePath);
 					enclosure = `\n      <enclosure url="${xmlText(imageUrl)}" length="${length}" type="${type}" />`;
 				}
-			} else {
-				// Use the dynamic og.png as the fallback enclosure
-				const fallbackOgUrl = `${siteConfig.url}/${post.slug}/og.png`;
-				enclosure = `\n      <enclosure url="${xmlText(fallbackOgUrl)}" length="102400" type="image/png" />`;
 			}
 
-			let contentHtml = await compileMarkdownToHtml(post.body);
-			// Convert relative links/assets directly to absolute URLs based on post slug
-			contentHtml = contentHtml.replace(/href="\.\//g, `href="${siteConfig.url}/${post.slug}/`);
-			contentHtml = contentHtml.replace(/src="\.\//g, `src="${siteConfig.url}/${post.slug}/`);
+			const contentHtml = await compileMarkdownToHtml(post.body, post.slug);
 			// Reformat category to not alter case, use post tags directly
 			const categories = post.tags
 				.map((tag) => `\n      <category>${xmlCdata(tag)}</category>`)
 				.join('');
 
 			// Generate 120-180 char description
-			const safeDesc = truncateDescription(post.plainText || post.description, 160);
+			const safeDesc = truncateDescription(post.description || post.plainText, 155);
 
 			return `
     <item>
