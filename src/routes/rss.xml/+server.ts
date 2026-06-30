@@ -65,9 +65,16 @@ export const GET: RequestHandler = async () => {
 					const type = getMimeType(testPath);
 					enclosure = `\n      <enclosure url="${xmlText(imageUrl)}" length="${length}" type="${type}" />`;
 				}
+			} else {
+				// Use the dynamic og.png as the fallback enclosure
+				const fallbackOgUrl = `${siteConfig.url}/${post.slug}/og.png`;
+				enclosure = `\n      <enclosure url="${xmlText(fallbackOgUrl)}" length="102400" type="image/png" />`;
 			}
 
-			const contentHtml = await compileMarkdownToHtml(post.body);
+			let contentHtml = await compileMarkdownToHtml(post.body);
+			// Convert relative links/assets directly to absolute URLs based on post slug
+			contentHtml = contentHtml.replace(/href="\.\//g, `href="${siteConfig.url}/${post.slug}/`);
+			contentHtml = contentHtml.replace(/src="\.\//g, `src="${siteConfig.url}/${post.slug}/`);
 			// Reformat category to not alter case, use post tags directly
 			const categories = post.tags
 				.map((tag) => `\n      <category>${xmlCdata(tag)}</category>`)
@@ -106,6 +113,11 @@ export const GET: RequestHandler = async () => {
     <copyright>${xmlText(`© ${new Date().getFullYear().toString()} ${siteConfig.author}`)}</copyright>
     <managingEditor>${xmlText(`${siteConfig.email} (${siteConfig.author})`)}</managingEditor>
     <webMaster>${xmlText(`${siteConfig.email} (${siteConfig.author})`)}</webMaster>
+    <image>
+      <url>${siteConfig.url}/og.png</url>
+      <title>${xmlCdata(siteConfig.title)}</title>
+      <link>${xmlText(siteConfig.url)}</link>
+    </image>
     ${itemsXml}
   </channel>
 </rss>`;

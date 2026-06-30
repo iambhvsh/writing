@@ -2,12 +2,10 @@ import { unified, type Processor } from 'unified';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
+
 import { sharedRemarkPlugins, sharedRehypePlugins } from './markdown.ts';
 
-function applyPlugins(
-	processor: Processor,
-	plugins: typeof sharedRemarkPlugins
-) {
+function applyPlugins(processor: Processor, plugins: typeof sharedRemarkPlugins) {
 	for (const plugin of plugins) {
 		if (Array.isArray(plugin)) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
