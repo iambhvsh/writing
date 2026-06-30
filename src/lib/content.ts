@@ -41,12 +41,10 @@ function slugFromPath(path: string): string {
 
 function extractMarkdownBody(content: string): string {
 	if (content.startsWith('---')) {
-		const end = content.indexOf('\n---', 3);
-		if (end !== -1) {
-			return content.substring(end + 4).trim();
-		}
+		const match = /^---\r?\n[\s\S]*?\r?\n---(?:\r?\n|$)/.exec(content);
+		if (match) return content.slice(match[0].length);
 	}
-	return content.trim();
+	return content;
 }
 
 function parseContentMetrics(content: string): {
@@ -54,7 +52,7 @@ function parseContentMetrics(content: string): {
 	wordCount: number;
 	readingTime: number;
 } {
-	let plainText = extractMarkdownBody(content);
+	let plainText = extractMarkdownBody(content).trim();
 	// Remove HTML tags (repeat until stable to avoid incomplete multi-character sanitization)
 	let previous: string;
 	do {
@@ -83,23 +81,27 @@ async function getRawContent(path: string): Promise<string> {
 	return loader ? ((await loader()) as string) : '';
 }
 
-function resolveCover(path: string, cover: string | undefined): string | undefined {
-	if (cover && (/^(https?:)?\/\//.test(cover) || cover.startsWith('/'))) return cover;
+function resolveCover(
+	path: string,
+	cover: string | undefined
+): { url: string | undefined; source: string | undefined } {
+	if (cover && (/^(https?:)?\/\//.test(cover) || cover.startsWith('/')))
+		return { url: cover, source: undefined };
 
 	const postDir = path.replace(/\/index\.(svx|md)$/, '');
 
 	if (cover) {
 		const coverPath = `${postDir}/${cover.replace(/^\.\//, '')}`.replace(/\/+/g, '/');
-		return imageModules[coverPath] as string | undefined;
+		return { url: imageModules[coverPath] as string | undefined, source: coverPath };
 	}
 
 	for (const extension of ['avif', 'webp', 'png', 'jpg', 'jpeg']) {
 		const coverPath = `${postDir}/cover.${extension}`;
 		const resolvedCover = imageModules[coverPath] as string | undefined;
-		if (resolvedCover) return resolvedCover;
+		if (resolvedCover) return { url: resolvedCover, source: coverPath };
 	}
 
-	return undefined;
+	return { url: undefined, source: undefined };
 }
 
 function isStringArray(value: unknown): value is string[] {
@@ -191,7 +193,7 @@ function buildPost(
 	metrics: { plainText: string; wordCount: number; readingTime: number; rawContent: string }
 ): Post {
 	const frontmatter = readPostMetadata(path, metadata);
-	const cover = resolveCover(path, frontmatter.cover);
+	const { url: coverUrl, source: coverSourcePath } = resolveCover(path, frontmatter.cover);
 
 	const post: Post = {
 		slug: slugFromPath(path),
@@ -207,7 +209,8 @@ function buildPost(
 
 	if (frontmatter.updatedAt !== undefined) post.updatedAt = frontmatter.updatedAt;
 
-	if (cover !== undefined) post.cover = cover;
+	if (coverUrl !== undefined) post.cover = coverUrl;
+	if (coverSourcePath !== undefined) post.coverSourcePath = coverSourcePath;
 	if (frontmatter.coverAlt !== undefined) post.coverAlt = frontmatter.coverAlt;
 
 	return post;

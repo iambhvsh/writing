@@ -6,6 +6,7 @@ export interface Post {
 	updatedAt?: string;
 	tags: string[];
 	cover?: string;
+	coverSourcePath?: string;
 	coverAlt?: string;
 	readingTime: number;
 	plainText: string;

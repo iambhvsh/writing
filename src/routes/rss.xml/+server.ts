@@ -46,7 +46,12 @@ function truncateDescription(text: string, length = 160): string {
 
 export const GET: RequestHandler = async () => {
 	const posts = await getAllPosts();
-	const lastBuildDate = new Date().toUTCString();
+	const newestPostTime = Math.max(
+		...posts.map((post) => new Date(post.updatedAt ?? post.publishedAt).getTime())
+	);
+	const lastBuildDate = new Date(
+		Number.isFinite(newestPostTime) ? newestPostTime : 0
+	).toUTCString();
 
 	const items = await Promise.all(
 		posts.slice(0, siteConfig.rssLimit ?? 20).map(async (post) => {
@@ -97,7 +102,7 @@ export const GET: RequestHandler = async () => {
       <link>${xmlText(`${siteConfig.url}/${post.slug}`)}</link>
       <guid isPermaLink="true">${xmlText(`${siteConfig.url}/${post.slug}`)}</guid>
       <pubDate>${new Date(post.publishedAt).toUTCString()}</pubDate>${enclosure}
-      <author>${xmlText(`dummy@example.com (${siteConfig.author})`)}</author>
+      <author>${xmlText(`iambhvsh@proton.me (${siteConfig.author})`)}</author>
       <dc:creator>${xmlCdata(siteConfig.author)}</dc:creator>${categories}
       <content:encoded>${xmlCdata(contentHtml)}</content:encoded>
     </item>`;
@@ -105,8 +110,6 @@ export const GET: RequestHandler = async () => {
 	);
 
 	const itemsXml = items.join('');
-	const logoUrl = `${siteConfig.url}/og.png`;
-
 	const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
@@ -120,15 +123,8 @@ export const GET: RequestHandler = async () => {
     <docs>https://www.rssboard.org/rss-specification</docs>
     <ttl>60</ttl>
     <copyright>${xmlText(`© ${new Date().getFullYear().toString()} ${siteConfig.author}`)}</copyright>
-    <managingEditor>${xmlText(`dummy@example.com (${siteConfig.author})`)}</managingEditor>
-    <webMaster>${xmlText(`dummy@example.com (${siteConfig.author})`)}</webMaster>
-    <image>
-      <url>${xmlText(logoUrl)}</url>
-      <title>${xmlCdata(siteConfig.title)}</title>
-      <link>${xmlText(siteConfig.url)}</link>
-      <width>1200</width>
-      <height>630</height>
-    </image>
+    <managingEditor>${xmlText(`iambhvsh@proton.me (${siteConfig.author})`)}</managingEditor>
+    <webMaster>${xmlText(`iambhvsh@proton.me (${siteConfig.author})`)}</webMaster>
     ${itemsXml}
   </channel>
 </rss>`;
