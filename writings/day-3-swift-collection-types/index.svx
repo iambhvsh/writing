@@ -205,7 +205,7 @@ The correct solution was using an array of dictionaries.
 ```swift
 let singers = [
     [
-        "Name": "Elizabeth Woolridge",
+        "Name": "Elizabeth Woolridge Grant",
         "Nickname": "Lana Del Rey"
     ],
     [

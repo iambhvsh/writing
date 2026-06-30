@@ -98,7 +98,7 @@ print(Array(alphabets.reversed()))
 
 let singers = [
     [
-        "Name": "Elizabeth Woolridge",
+        "Name": "Elizabeth Woolridge Grant",
         "Nickname": "Lana Del Rey",
         "Username": "@honeymoon"
     ],
@@ -138,7 +138,7 @@ print(heights)
 // MARK: - Sets
 
 let favoriteSingers: Set = [
-    "Elizabeth Woolridge",
+    "Elizabeth Woolridge Grant",
     "Taylor Swift",
     "The Neighbourhood",
     "Dhee",
@@ -165,13 +165,13 @@ print(breeds)
 // MARK: - Enumerations (Enums)
 
 enum Singer: String {
-    case elizabethWoolridge = "Elizabeth Woolridge"
+    case elizabethWoolridgeGrant = "Elizabeth Woolridge Grant"
     case taylorSwift = "Taylor Swift"
     case chinmayiShripada = "Chinmayi Shripada"
 }
 
-print(Singer.elizabethWoolridge)
-print(Singer.elizabethWoolridge.rawValue)
+print(Singer.elizabethWoolridgeGrant)
+print(Singer.elizabethWoolridgeGrant.rawValue)
 
 
 // Another enum

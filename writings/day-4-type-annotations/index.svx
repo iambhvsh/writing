@@ -26,7 +26,7 @@ One of my favorite things about Swift is that it doesn't ask you to repeat yours
 When I write this:
 
 ```swift
-let fullName = "Elizabeth Woolridge"
+let fullName = "Elizabeth Woolridge Grant"
 ```
 
 Swift immediately understands that `fullName` is a `String`.
