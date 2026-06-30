@@ -1,41 +1,51 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment */
 import remarkToc from 'remark-toc';
 import rehypeSlug from 'rehype-slug';
 import rehypeUnwrapImages from 'rehype-unwrap-images';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import remarkRelativeAssets from './assets.ts'; // NOTE: extension is .ts originally in svelte.config.js but we should import `.js` to be TS-Node/Vite compliant, wait, .js is fine.
+import remarkRelativeAssets from './assets.ts';
 import { visit } from 'unist-util-visit';
+import type { Root as MdastRoot, RootContent as MdastContent } from 'mdast';
+import type { Root as HastRoot, Element as HastElement } from 'hast';
 
-export function remarkTableOfContentsHeading() {
-	return (tree: any) => {
-		const isTocHeading = (node: any) =>
+function remarkTableOfContentsHeading() {
+	return (tree: MdastRoot) => {
+		const isTocHeading = (node: MdastContent) =>
 			node.type === 'heading' &&
+			'depth' in node &&
 			node.depth === 2 &&
+			'children' in node &&
 			node.children.some(
-				(child: any) => child.type === 'text' && child.value.toLowerCase() === 'table of contents'
+				(child: MdastContent) =>
+					child.type === 'text' &&
+					'value' in child &&
+					typeof child.value === 'string' &&
+					child.value.toLowerCase() === 'table of contents'
 			);
 
-		tree.children = tree.children.filter((node: any, index: number, children: any[]) => {
-			if (isTocHeading(node)) return false;
-			if (node.type === 'list' && index > 0 && isTocHeading(children[index - 1])) return false;
-			return true;
-		});
+		tree.children = tree.children.filter(
+			(node: MdastContent, index: number, children: MdastContent[]) => {
+				if (isTocHeading(node)) return false;
+				const prev = children[index - 1];
+				if (node.type === 'list' && prev && isTocHeading(prev)) return false;
+				return true;
+			}
+		);
 
 		tree.children.unshift({
 			type: 'heading',
 			depth: 2,
 			children: [{ type: 'text', value: 'Table of Contents' }],
-		});
+		} as unknown as MdastContent);
 	};
 }
 
-export function rehypeFigure() {
-	return (tree: any) => {
-		visit(tree, 'element', (node: any, index, parent) => {
+function rehypeFigure() {
+	return (tree: HastRoot) => {
+		visit(tree, 'element', (node: HastElement, index, parent) => {
 			if (node.tagName === 'img' && parent?.type === 'root' && index !== undefined) {
 				const alt = typeof node.properties?.alt === 'string' ? node.properties.alt : '';
 
-				const figure = {
+				const figure: HastElement = {
 					type: 'element',
 					tagName: 'figure',
 					properties: {},
@@ -47,9 +57,10 @@ export function rehypeFigure() {
 						type: 'element',
 						tagName: 'figcaption',
 						properties: {},
-						children: [{ type: 'text', value: alt }],
+						children: [{ type: 'text', value: alt } as unknown as HastElement],
 					});
 				}
+
 
 				parent.children[index] = figure;
 			}
@@ -57,13 +68,17 @@ export function rehypeFigure() {
 	};
 }
 
-export const sharedRemarkPlugins: any[] = [
+// Ensure the array type is correctly identified by Unified
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type UnifiedPluginItem = any;
+
+export const sharedRemarkPlugins: UnifiedPluginItem[] = [
 	remarkRelativeAssets,
 	remarkTableOfContentsHeading,
 	[remarkToc, { tight: true, ordered: false }],
 ];
 
-export const sharedRehypePlugins: any[] = [
+export const sharedRehypePlugins: UnifiedPluginItem[] = [
 	rehypeUnwrapImages,
 	rehypeFigure,
 	rehypeSlug,
