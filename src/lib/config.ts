@@ -6,6 +6,7 @@ export const siteConfig = {
 	url: 'https://writing.iambhvsh.in',
 	author: 'Bhavesh Patil',
 	authorUrl: 'https://iambhvsh.in',
+	email: 'iambhvsh@proton.me',
 	twitter: '@iambhvsh',
 	ogImage: '/og.png',
 	rssLimit: 20,

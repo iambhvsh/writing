@@ -83,7 +83,7 @@ export const GET: RequestHandler = async () => {
       <link>${xmlText(`${siteConfig.url}/${post.slug}`)}</link>
       <guid isPermaLink="true">${xmlText(`${siteConfig.url}/${post.slug}`)}</guid>
       <pubDate>${new Date(post.publishedAt).toUTCString()}</pubDate>${enclosure}
-      <author>${xmlText(`iambhvsh@proton.me (${siteConfig.author})`)}</author>
+      <author>${xmlText(`${siteConfig.email} (${siteConfig.author})`)}</author>
       <dc:creator>${xmlCdata(siteConfig.author)}</dc:creator>${categories}
       <content:encoded>${xmlCdata(contentHtml)}</content:encoded>
     </item>`;
@@ -104,8 +104,8 @@ export const GET: RequestHandler = async () => {
     <docs>https://www.rssboard.org/rss-specification</docs>
     <ttl>60</ttl>
     <copyright>${xmlText(`© ${new Date().getFullYear().toString()} ${siteConfig.author}`)}</copyright>
-    <managingEditor>${xmlText(`iambhvsh@proton.me (${siteConfig.author})`)}</managingEditor>
-    <webMaster>${xmlText(`iambhvsh@proton.me (${siteConfig.author})`)}</webMaster>
+    <managingEditor>${xmlText(`${siteConfig.email} (${siteConfig.author})`)}</managingEditor>
+    <webMaster>${xmlText(`${siteConfig.email} (${siteConfig.author})`)}</webMaster>
     ${itemsXml}
   </channel>
 </rss>`;

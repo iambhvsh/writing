@@ -20,6 +20,7 @@ export interface SiteConfig {
 	url: string;
 	author: string;
 	authorUrl: string;
+	email?: string;
 	twitter?: string;
 	ogImage?: string;
 	rssLimit?: number;

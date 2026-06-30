@@ -61,7 +61,6 @@ function rehypeFigure() {
 					});
 				}
 
-
 				parent.children[index] = figure;
 			}
 		});
