@@ -102,7 +102,6 @@ export const GET: RequestHandler = async () => {
     <atom:link href="${xmlText(`${siteConfig.url}/rss.xml`)}" rel="self" type="application/rss+xml"/>
     <language>en-US</language>
     <lastBuildDate>${lastBuildDate}</lastBuildDate>
-    <generator>${xmlText(siteConfig.url)}</generator>
     <docs>https://www.rssboard.org/rss-specification</docs>
     <ttl>360</ttl>
     <copyright>${xmlText(`© ${new Date().getFullYear().toString()} ${siteConfig.author}`)}</copyright>
