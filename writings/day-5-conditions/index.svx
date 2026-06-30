@@ -1,0 +1,344 @@
+---
+title: "Day 5: Teaching Swift to Make Decisions"
+description: "On my fifth day learning Swift, I explored conditions, comparison operators, logical operators, switch statements, and the ternary operator. Today was less about writing more code and more about teaching Swift how to think."
+publishedAt: 2026-06-30
+tags: Swift, Swift Programming, iOS Development, Apple Development, SwiftUI
+coverImage: "./cover.jpg"
+coverAlt: "Swift code demonstrating conditions, switch statements, logical operators, and the ternary conditional operator"
+---
+
+## From Instructions to Decisions
+
+The first few days of learning Swift were mostly about understanding the language itself.
+
+Variables store information.
+
+Constants protect values from changing.
+
+Collections organize data.
+
+Enums group related values together.
+
+Every example I wrote followed the same pattern.
+
+The code started at the top, executed one line after another, and eventually reached the end.
+
+There wasn't much room for decision making.
+
+Today's lesson changed that.
+
+For the first time, I wasn't just writing instructions.
+
+I was teaching Swift how to decide what should happen next.
+
+That feels like a much bigger step than simply learning another keyword.
+
+## Every Decision Starts with a Question
+
+Every condition in Swift asks a question.
+
+The answer is always one of two possibilities.
+
+`true`.
+
+Or `false`.
+
+That sounds almost too simple, but once I started writing conditions myself, I realized almost every program depends on those two values.
+
+```swift
+let favoriteSinger = "Elizabeth Woolridge"
+
+if favoriteSinger == "Elizabeth Woolridge" {
+    print("Yes, that's Lana Del Rey.")
+}
+```
+
+The condition asks a single question.
+
+Does the value stored inside `favoriteSinger` exactly match `"Elizabeth Woolridge"`?
+
+If it does, the condition becomes `true`.
+
+If it doesn't, it becomes `false`.
+
+Swift then decides whether the code inside the braces should run.
+
+It's surprisingly straightforward once you understand that every condition is simply asking a question.
+
+## More Than Just Numbers
+
+When I first saw comparison operators, I assumed they were mainly used with numbers.
+
+That turned out to be only part of the story.
+
+Numbers are an obvious place to begin.
+
+```swift
+let score = 86
+
+if score >= 80 {
+    print("Excellent!")
+}
+```
+
+But Swift also lets us compare strings.
+
+```swift
+let singerOne = "Elizabeth Woolridge"
+let singerTwo = "Taylor Swift"
+
+if singerOne < singerTwo {
+    print("\(singerOne) comes first alphabetically.")
+}
+```
+
+The first time I saw this example, I wondered how a language could decide that one sentence was "less than" another.
+
+The answer is surprisingly logical.
+
+Swift compares one character at a time.
+
+Since **E** comes before **T**, `"Elizabeth Woolridge"` appears before `"Taylor Swift"` alphabetically.
+
+It's one of those details that seems small until you realize it's exactly how features like sorting lists actually work.
+
+## Not Every Decision Is Simply Yes or No
+
+Real applications rarely have only two possible outcomes.
+
+Sometimes there are several possibilities.
+
+That's where `else if` fits perfectly.
+
+```swift
+let score = 86
+
+if score < 40 {
+    print("Failed")
+} else if score <= 80 {
+    print("Passed")
+} else {
+    print("Excellent!")
+}
+```
+
+One detail finally clicked for me today.
+
+Swift checks these conditions one at a time.
+
+The moment one becomes `true`, everything below it is ignored.
+
+That explains why the order of conditions matters.
+
+It also explains why the second condition doesn't need to check whether the score is greater than forty.
+
+If Swift reaches that point, it already knows the first condition wasn't true.
+
+Little details like that are starting to make the language feel much more intentional.
+
+## Combining Questions
+
+One question isn't always enough.
+
+Sometimes a decision depends on multiple things happening at the same time.
+
+Swift solves that with logical operators.
+
+The first one I learned was `&&`, which means **AND**.
+
+```swift
+let likesLana = true
+let likesBillie = true
+
+if likesLana && likesBillie {
+    print("Perfect playlist.")
+}
+```
+
+Both conditions must be true.
+
+If either one becomes false, the entire condition becomes false.
+
+The second operator is `||`, which means **OR**.
+
+```swift
+let likesTaylor = false
+
+if likesLana || likesTaylor {
+    print("At least one favorite artist is selected.")
+}
+```
+
+Only one condition needs to be true.
+
+These operators immediately made the examples feel more realistic.
+
+Instead of checking one thing at a time, I could express situations that depended on several different pieces of information.
+
+I can already imagine using them for authentication, permissions, filtering content, and validating forms.
+
+## Enums Feel Even More Useful Now
+
+Enums returned today, but this time they weren't just another way of organizing values.
+
+They became part of the decision making process.
+
+```swift
+enum Singer {
+    case lanaDelRey
+    case billieEilish
+    case taylorSwift
+    case coldplay
+}
+
+let currentFavorite = Singer.lanaDelRey
+```
+
+Instead of comparing strings repeatedly, I could compare predefined values.
+
+```swift
+if currentFavorite == .lanaDelRey {
+    print("Elizabeth Woolridge will always be my favorite artist.")
+}
+```
+
+The more I use enums, the more I appreciate what they're trying to accomplish.
+
+Instead of relying on text that could easily contain a typo, Swift lets me work with a fixed set of valid values.
+
+It's another example of the language encouraging clarity over convenience.
+
+## The Right Tool for Multiple Possibilities
+
+The biggest topic today was the `switch` statement.
+
+Initially it looked like another way of writing several `if` statements.
+
+After writing a few examples myself, it became obvious why Swift treats it as a separate feature.
+
+```swift
+switch currentFavorite {
+
+case .lanaDelRey:
+    print("Now Playing: Lana Del Rey")
+
+case .billieEilish:
+    print("Now Playing: Billie Eilish")
+
+case .taylorSwift:
+    print("Now Playing: Taylor Swift")
+
+case .coldplay:
+    print("Now Playing: Coldplay")
+}
+```
+
+Reading a `switch` feels different.
+
+Instead of repeatedly asking the same question, it presents every possible outcome in one place.
+
+Even better, Swift insists that every possible case is handled.
+
+Because my enum defines every available value, Swift already knows what possibilities exist.
+
+That means I don't need a `default` case.
+
+If I later add another singer to the enum, Swift immediately reminds me that my `switch` is incomplete.
+
+I like that.
+
+The compiler isn't just checking syntax.
+
+It's helping prevent mistakes before the program even runs.
+
+Today's lesson also introduced `fallthrough`.
+
+It's not something I'll reach for often, but it was interesting to learn that Swift allows one case to intentionally continue into the next when that's the behavior you actually want.
+
+## A Smaller Way to Express the Same Idea
+
+The final topic today was the ternary conditional operator.
+
+I'll admit that it looked confusing at first.
+
+```swift
+let hour = 16
+
+let greeting = hour < 12
+    ? "Good morning."
+    : "Good afternoon."
+```
+
+After rewriting it as a regular `if` statement, everything made sense.
+
+The ternary operator isn't introducing a new idea.
+
+It's simply another way of expressing an existing one.
+
+For small decisions with only two outcomes, it removes a few lines without making the code harder to understand.
+
+That's becoming a recurring theme throughout Swift.
+
+The language often provides a shorter way to write something, but it rarely sacrifices readability to achieve it.
+
+## More Than Learning Syntax
+
+One thing has become increasingly clear over these past five days.
+
+Swift isn't simply teaching me syntax.
+
+It's teaching me how to think about problems.
+
+Today's lesson wasn't really about `if`, `switch`, or `?`.
+
+Those are just tools.
+
+The real lesson was understanding how software makes decisions.
+
+Every application I use every day reacts to information.
+
+Buttons become enabled.
+
+Errors appear.
+
+Permissions are checked.
+
+Content changes depending on who is signed in.
+
+Recommendations are personalized.
+
+All of those experiences begin with conditions that evaluate to either `true` or `false`.
+
+Today I finally started learning how those decisions are expressed in code.
+
+## Looking Ahead
+
+Five days into learning Swift, I'm beginning to notice a pattern.
+
+Each lesson builds naturally on the previous one.
+
+Variables gave me somewhere to store information.
+
+Collections taught me how to organize it.
+
+Enums gave names to related values.
+
+Today those pieces finally started working together.
+
+Instead of writing programs that simply execute from top to bottom, I'm learning how to write programs that respond.
+
+Programs that adapt.
+
+Programs that make decisions.
+
+That feels like an important milestone.
+
+The code I'm writing is still simple, but the ideas behind it are becoming much more powerful.
+
+I'm looking forward to seeing where tomorrow takes me.
+
+## Day 5 Code
+
+The complete code from today's learning session is available here:
+
+* [conditions.swift](./conditions.swift)
