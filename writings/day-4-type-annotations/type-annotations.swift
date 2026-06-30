@@ -2,7 +2,7 @@
 
 let score: Double = 0
 let randomNumber: Int = 566
-let fullName: String = "Elizabeth Woolridge"
+let fullName: String = "Elizabeth Woolridge Grant"
 
 let luckyNumbers: [Int] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 

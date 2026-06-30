@@ -46,16 +46,16 @@ Or `false`.
 That sounds almost too simple, but once I started writing conditions myself, I realized almost every program depends on those two values.
 
 ```swift
-let favoriteSinger = "Elizabeth Woolridge"
+let favoriteSinger = "Elizabeth Woolridge Grant"
 
-if favoriteSinger == "Elizabeth Woolridge" {
+if favoriteSinger == "Elizabeth Woolridge Grant" {
     print("Yes, that's Lana Del Rey.")
 }
 ```
 
 The condition asks a single question.
 
-Does the value stored inside `favoriteSinger` exactly match `"Elizabeth Woolridge"`?
+Does the value stored inside `favoriteSinger` exactly match `"Elizabeth Woolridge Grant"`?
 
 If it does, the condition becomes `true`.
 
@@ -84,7 +84,7 @@ if score >= 80 {
 But Swift also lets us compare strings.
 
 ```swift
-let singerOne = "Elizabeth Woolridge"
+let singerOne = "Elizabeth Woolridge Grant"
 let singerTwo = "Taylor Swift"
 
 if singerOne < singerTwo {
@@ -98,7 +98,7 @@ The answer is surprisingly logical.
 
 Swift compares one character at a time.
 
-Since **E** comes before **T**, `"Elizabeth Woolridge"` appears before `"Taylor Swift"` alphabetically.
+Since **E** comes before **T**, `"Elizabeth Woolridge Grant"` appears before `"Taylor Swift"` alphabetically.
 
 It's one of those details that seems small until you realize it's exactly how features like sorting lists actually work.
 
@@ -198,7 +198,7 @@ Instead of comparing strings repeatedly, I could compare predefined values.
 
 ```swift
 if currentFavorite == .lanaDelRey {
-    print("Elizabeth Woolridge will always be my favorite artist.")
+    print("Elizabeth Woolridge Grant will always be my favorite artist.")
 }
 ```
 

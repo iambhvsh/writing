@@ -4,9 +4,9 @@
 // Checking Whether a Condition is True or False
 // ============================================================
 
-let favoriteSinger = "Elizabeth Woolridge"
+let favoriteSinger = "Elizabeth Woolridge Grant"
 
-if favoriteSinger == "Elizabeth Woolridge" {
+if favoriteSinger == "Elizabeth Woolridge Grant" {
     print("Yes, that's Lana Del Rey.")
 } else {
     print("That's another artist.")
@@ -42,7 +42,7 @@ if score >= 80 {
 
 // Strings
 
-let singerOne = "Elizabeth Woolridge"
+let singerOne = "Elizabeth Woolridge Grant"
 let singerTwo = "Taylor Swift"
 
 if singerOne < singerTwo {
@@ -65,7 +65,7 @@ if likesLana {
 // ============================================================
 
 var favoriteArtists = [
-    "Elizabeth Woolridge",
+    "Elizabeth Woolridge Grant",
     "Billie Eilish",
     "Taylor Swift"
 ]
@@ -132,7 +132,7 @@ enum Singer {
 let currentFavorite = Singer.billieEilish
 
 if currentFavorite == .lanaDelRey {
-    print("Elizabeth Woolridge will always be my favorite artist.")
+    print("Elizabeth Woolridge Grant will always be my favorite artist.")
 } else if currentFavorite == .billieEilish {
     print("Billie Eilish is my second favorite artist.")
 } else if currentFavorite == .taylorSwift {
