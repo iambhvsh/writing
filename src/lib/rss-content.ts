@@ -33,7 +33,6 @@ function rehypeAbsoluteUrls(options: { slug: string }) {
 	};
 }
 
-
 function applyPlugins(processor: Processor, plugins: typeof sharedRemarkPlugins) {
 	for (const plugin of plugins) {
 		if (Array.isArray(plugin)) {

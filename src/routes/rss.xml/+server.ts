@@ -58,10 +58,11 @@ export const GET: RequestHandler = async () => {
 			let enclosure = '';
 
 			if (post.coverSourcePath) {
-				const testPath = path.resolve(process.cwd(), '.' + post.coverSourcePath);
-				const length = await getEnclosureLength(testPath);
+				const normalizedCoverPath = post.coverSourcePath.replace(/^\/+/, '');
+				const resolvedCoverPath = path.resolve(process.cwd(), normalizedCoverPath);
+				const length = await getEnclosureLength(resolvedCoverPath);
 				if (length) {
-					const type = getMimeType(post.coverSourcePath);
+					const type = getMimeType(normalizedCoverPath);
 					enclosure = `\n      <enclosure url="${xmlText(imageUrl)}" length="${length}" type="${type}" />`;
 				}
 			}
@@ -90,6 +91,8 @@ export const GET: RequestHandler = async () => {
 	);
 
 	const itemsXml = items.join('');
+	const channelImageUrl = xmlText(new URL(siteConfig.ogImage ?? '/og.png', siteConfig.url).href);
+
 	const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
@@ -106,7 +109,7 @@ export const GET: RequestHandler = async () => {
     <managingEditor>${xmlText(`${siteConfig.email} (${siteConfig.author})`)}</managingEditor>
     <webMaster>${xmlText(`${siteConfig.email} (${siteConfig.author})`)}</webMaster>
     <image>
-      <url>${siteConfig.url}/og.png</url>
+      <url>${channelImageUrl}</url>
       <title>${xmlCdata(siteConfig.title)}</title>
       <link>${xmlText(siteConfig.url)}</link>
     </image>
@@ -116,7 +119,7 @@ export const GET: RequestHandler = async () => {
 
 	return new Response(rss.trim(), {
 		headers: {
-			'Content-Type': 'application/xml; charset=utf-8',
+			'Content-Type': 'application/rss+xml; charset=utf-8',
 			'Cache-Control': 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400',
 		},
 	});
