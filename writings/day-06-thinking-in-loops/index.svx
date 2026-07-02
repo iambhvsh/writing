@@ -1,0 +1,255 @@
+---
+title: "Day 6: Thinking in Loops"
+description: "On my sixth day learning Swift, I explored for loops, while loops, continue, break, and completed the classic FizzBuzz challenge. Today wasn't about repeating code. It was about understanding iteration and control flow."
+publishedAt: 2026-07-02
+tags: Swift, Swift Programming, iOS Development, Apple Development, SwiftUI
+coverImage: "./cover.jpg"
+coverAlt: "Swift code demonstrating for loops, while loops, continue, break, and the FizzBuzz challenge"
+---
+
+## Teaching Swift to Repeat
+
+One of the first things I noticed while learning programming is that computers are incredibly good at repetitive work.
+
+Humans don't enjoy writing the same code over and over again.
+
+Computers don't mind executing the same instructions thousands or even millions of times.
+
+Today's lesson was about giving Swift a way to repeat work without repeating myself.
+
+That idea sounds simple.
+
+In practice, it changes how programs are written.
+
+## Repeating Work with `for`
+
+The first loop I learned was the `for` loop.
+
+Instead of writing the same statement several times, Swift can repeat it automatically.
+
+```swift
+let platforms = ["iOS", "macOS", "tvOS", "iPadOS"]
+
+for platform in platforms {
+    print("Swift works on \(platform).")
+}
+```
+
+Every iteration gives me one value from the collection.
+
+By the end of the loop, every platform has been processed.
+
+The syntax is surprisingly readable.
+
+It almost feels like plain English.
+
+> For every platform in platforms...
+
+That readability is something I've started appreciating more and more as I continue learning Swift.
+
+## Ranges Are More Than Numbers
+
+One detail that surprised me today was that ranges are actual types.
+
+I had always written loops like this.
+
+```swift
+for i in 1...5 {
+    print(i)
+}
+```
+
+Later, I learned that the range itself can be stored.
+
+```swift
+let count = 1...5
+
+for i in count {
+    print(i)
+}
+```
+
+For some reason, that never crossed my mind before today.
+
+It's one of those small language features that immediately makes sense once you see it.
+
+## Understanding Iteration
+
+Another thing that finally clicked today was the word **iteration**.
+
+At first, I treated loops as something magical.
+
+Now I think about them much more simply.
+
+Every iteration follows the same pattern.
+
+The loop checks whether it should continue.
+
+If it should, Swift executes everything inside the loop body.
+
+Then the process repeats.
+
+That mental model made loops much easier to understand than trying to memorize examples.
+
+## When You Don't Know How Many Times
+
+`for` loops are great when the number of repetitions is already known.
+
+`while` loops solve a different problem.
+
+They continue until a condition becomes false.
+
+```swift
+var countdown = 10
+
+while countdown > 0 {
+    print(countdown)
+    countdown -= 1
+}
+```
+
+This looked straightforward until I started answering checkpoint questions.
+
+That's when I realized something important.
+
+Swift checks the condition **before** each new iteration.
+
+Once the loop begins, it finishes executing everything inside the braces before checking the condition again.
+
+That tiny detail completely changed how I read `while` loops.
+
+## The Difference Between `continue` and `break`
+
+Today's lesson also introduced two keywords that completely change how a loop behaves.
+
+The first was `continue`.
+
+```swift
+if fileName.hasSuffix(".html") == false {
+    continue
+}
+```
+
+Instead of stopping the loop, `continue` skips the current iteration and immediately moves to the next one.
+
+The second keyword was `break`.
+
+```swift
+if multiples.count == 10 {
+    break
+}
+```
+
+Unlike `continue`, `break` exits the loop entirely.
+
+It doesn't skip one iteration.
+
+It ends the loop.
+
+That difference seemed small at first, but after experimenting with both, it became much easier to understand when each one should be used.
+
+## Debugging My Own Thinking
+
+Today's checkpoint was probably the most challenging one so far.
+
+Not because the syntax was difficult.
+
+The challenge was learning to trace the code one step at a time.
+
+Several questions caught me because I was trying to predict the final answer instead of following each iteration.
+
+Eventually, I stopped guessing.
+
+I started tracing.
+
+Current value.
+
+Condition.
+
+Loop body.
+
+Update.
+
+Repeat.
+
+That simple process helped me understand every question I had previously answered incorrectly.
+
+Looking back, the problem wasn't Swift.
+
+It was how I was reading the code.
+
+## FizzBuzz
+
+The checkpoint for today was the classic FizzBuzz challenge.
+
+The goal was simple.
+
+- Print **Fizz** for multiples of 3.
+- Print **Buzz** for multiples of 5.
+- Print **FizzBuzz** for numbers divisible by both.
+- Otherwise, print the number itself.
+
+```swift
+for i in 1...100 {
+
+    if i.isMultiple(of: 3) && i.isMultiple(of: 5) {
+        print("FizzBuzz")
+    } else if i.isMultiple(of: 3) {
+        print("Fizz")
+    } else if i.isMultiple(of: 5) {
+        print("Buzz")
+    } else {
+        print(i)
+    }
+}
+```
+
+My first attempt had one small mistake.
+
+I checked whether a number was divisible by 3 before checking whether it was divisible by both 3 and 5.
+
+That meant numbers like `15` printed `"Fizz"` instead of `"FizzBuzz"`.
+
+The fix wasn't changing the logic.
+
+It was changing the order.
+
+Sometimes programming isn't about writing more code.
+
+It's about asking the right question first.
+
+## Patterns Are Starting to Appear
+
+One thing I've noticed over the past week is that Swift keeps introducing concepts that build on each other.
+
+Variables store information.
+
+Collections organize it.
+
+Conditions decide what should happen.
+
+Loops repeat that work.
+
+Every new lesson feels connected to the previous one.
+
+Instead of learning isolated features, I'm slowly learning how they work together.
+
+## Looking Ahead
+
+Today's lesson wasn't really about loops.
+
+It was about thinking differently.
+
+Instead of asking how to write the same statement ten times, I'm starting to ask how to describe the pattern once and let Swift handle the repetition.
+
+That feels like a much more valuable skill.
+
+The syntax will eventually become muscle memory.
+
+Learning how to think in loops is the part I'll probably remember.
+
+## Day 6 Code
+
+The complete code from today's learning session is available here:
+
+* [iteration.swift](./iteration.swift)
