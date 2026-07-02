@@ -7,7 +7,7 @@
 		<meta name="google-site-verification" content="kTDH92ri-PKoJ0-NSUVVuy7eRuYdX0M_Cwx0XzPnfrc" />
 		<script>
 			const theme = localStorage.getItem('theme');
-			const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+			const prefersDark = globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
 			document.documentElement.dataset.theme =
 				theme === 'dark' || (!theme && prefersDark) ? 'dark' : 'light';
 		</script>
@@ -16,14 +16,16 @@
 			href="/fonts/web/InterVariable.woff2"
 			as="font"
 			type="font/woff2"
-			crossorigin="anonymous"
+			crossorigin
+			fetchpriority="high"
 		/>
 		<link
 			rel="preload"
 			href="/fonts/web/InstrumentSerif-Regular.woff2"
 			as="font"
 			type="font/woff2"
-			crossorigin="anonymous"
+			crossorigin
+			fetchpriority="high"
 		/>
 		<link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml" />
 		%sveltekit.head%
