@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { Post } from '$lib/types.js';
+	import type { PostPreview } from '$lib/types.js';
 	import { formatDate } from '$lib/utils.js';
 
 	interface Props {
-		post: Post;
+		post: PostPreview;
 		featured?: boolean;
 	}
 

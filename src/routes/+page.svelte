@@ -4,6 +4,7 @@
 	import PostCard from '$lib/components/PostCard.svelte';
 	import { buildSeo } from '$lib/seo.js';
 	import { siteConfig } from '$lib/config.js';
+	import { onMount } from 'svelte';
 
 	interface Props {
 		data: PageData;
@@ -14,6 +15,38 @@
 	);
 
 	const avatarUrl = 'https://db.iambhvsh.in/assets/profile.webp';
+
+	let visibleCount = $state(siteConfig.postsPerPage ?? 6);
+	const visiblePosts = $derived(data.posts.slice(0, visibleCount));
+	let observer: IntersectionObserver;
+	let sentinel: HTMLElement | undefined = $state();
+
+	onMount(() => {
+		if (typeof IntersectionObserver !== 'undefined') {
+			observer = new IntersectionObserver(
+				(entries) => {
+					const entry = entries[0];
+					if (entry?.isIntersecting) {
+						visibleCount = Math.min(
+							visibleCount + (siteConfig.postsPerPage ?? 6),
+							data.posts.length
+						);
+					}
+				},
+				{ rootMargin: '200px' }
+			);
+		}
+
+		return () => {
+			if (observer) observer.disconnect();
+		};
+	});
+
+	$effect(() => {
+		if (observer && sentinel) {
+			observer.observe(sentinel);
+		}
+	});
 </script>
 
 <Seo {seo} />
@@ -36,10 +69,14 @@
 
 	{#if data.posts.length > 0}
 		<section class="posts-section" aria-label="Recent posts">
-			{#each data.posts as post, i (post.slug)}
+			{#each visiblePosts as post, i (post.slug)}
 				<PostCard {post} featured={i === 0} />
 			{/each}
 		</section>
+
+		{#if visibleCount < data.posts.length}
+			<div bind:this={sentinel} class="sentinel" aria-hidden="true" style="height: 1px;"></div>
+		{/if}
 	{:else}
 		<p class="empty-state">No posts yet. Come back soon.</p>
 	{/if}
