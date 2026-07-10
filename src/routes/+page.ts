@@ -5,5 +5,13 @@ export const prerender = true;
 
 export const load: PageLoad = async ({ url }) => {
 	const posts = await getAllPosts();
-	return { origin: url.origin, posts: posts.slice(0, 6) };
+	const mappedPosts = posts.map(({ slug, title, description, publishedAt, tags, readingTime }) => ({
+		slug,
+		title,
+		description,
+		publishedAt,
+		tags,
+		readingTime,
+	}));
+	return { origin: url.origin, posts: mappedPosts };
 };

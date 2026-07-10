@@ -1,3 +1,5 @@
+export type PostPreview = Omit<Post, 'plainText' | 'wordCount' | 'body'>;
+
 export interface Post {
 	slug: string;
 	title: string;
@@ -24,4 +26,5 @@ export interface SiteConfig {
 	twitter?: string;
 	ogImage?: string;
 	rssLimit?: number;
+	postsPerPage?: number;
 }

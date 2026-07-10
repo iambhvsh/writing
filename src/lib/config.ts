@@ -11,4 +11,5 @@ export const siteConfig = {
 	twitter: '@iambhvsh',
 	ogImage: '/og.png',
 	rssLimit: 20,
+	postsPerPage: 6,
 } satisfies SiteConfig;
