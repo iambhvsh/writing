@@ -21,6 +21,7 @@
 	let pagefindReady = $state(dev);
 	let pagefindLoadPromise: Promise<Pagefind | null> | null = null;
 	let open = $state(false);
+	let openAccordionUrl = $state<string | null>(null);
 	let reducedMotion = $state(false);
 
 	const searchMotion = $derived({
@@ -106,17 +107,26 @@
 			open = false;
 			query = '';
 			results = [];
+			openAccordionUrl = null;
 		}
 		if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
 			e.preventDefault();
 			open = !open;
-			if (open) void loadPagefind();
+		if (open) {
+			void loadPagefind();
+		} else {
+			openAccordionUrl = null;
+		}
 		}
 	}
 
 	function toggleSearch() {
 		open = !open;
-		if (open) void loadPagefind();
+		if (open) {
+			void loadPagefind();
+		} else {
+			openAccordionUrl = null;
+		}
 	}
 </script>
 
@@ -184,25 +194,36 @@
 				</button>
 			</div>
 			{#if results.length > 0}
+
 				<ul class="search-results" role="listbox" aria-label="Search results">
 					{#each results as result (result.url)}
 						<li class="search-result-group" role="option" aria-selected="false" transition:fly={{ ...searchMotion, y: 8 }}>
-							<span class="result-title">{result.title}</span>
-							<ul class="search-matches">
-								{#each result.matches as match, i (i)}
-									<li>
-										<a
-											href={match.fragmentUrl}
-											class="search-match-link" data-sveltekit-reload
-											onclick={() => {
-												open = false;
-											}}
-										>
-											<span class="result-excerpt">{@html match.excerpt}</span>
-										</a>
-									</li>
-								{/each}
-							</ul>
+							<button
+                                class="result-title-btn"
+                                onclick={() => openAccordionUrl = openAccordionUrl === result.url ? null : result.url}
+                                aria-expanded={openAccordionUrl === result.url}
+                            >
+                                <span class="result-title">{result.title}</span>
+                                <span class="result-badge">{result.matches.length} {result.matches.length === 1 ? 'match' : 'matches'}</span>
+                            </button>
+                            {#if openAccordionUrl === result.url}
+                                <ul class="search-matches" transition:fly={{ ...searchMotion, y: -4 }}>
+                                    {#each result.matches as match, i (i)}
+                                        <li>
+                                            <a
+                                                href={match.fragmentUrl}
+                                                class="search-match-link" data-sveltekit-reload
+                                                onclick={() => {
+                                                    open = false;
+                                                    openAccordionUrl = null;
+                                                }}
+                                            >
+                                                <span class="result-excerpt">{@html match.excerpt}</span>
+                                            </a>
+                                        </li>
+                                    {/each}
+                                </ul>
+                            {/if}
 						</li>
 					{/each}
 				</ul>
@@ -351,14 +372,37 @@
 		gap: 0.25rem;
 		padding: 0.5rem;
 	}
+	.result-title-btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0.5rem 0.5rem;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        border-radius: var(--radius-md);
+        transition: background-color var(--duration-fast) var(--ease-base);
+    }
+    .result-title-btn:hover {
+        background-color: var(--color-surface-hover);
+    }
 	.result-title {
 		display: block;
 		font-size: var(--text-sm);
 		font-weight: 500;
 		color: var(--color-text-primary);
-		padding: 0 0.5rem;
-		margin-bottom: 0.25rem;
+        text-align: left;
 	}
+    .result-badge {
+        font-size: var(--text-xs);
+        padding: 0.125rem 0.375rem;
+        background: none;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-full);
+        color: var(--color-text-secondary);
+        white-space: nowrap;
+    }
 	.search-matches {
 		list-style: none;
 		margin: 0;
