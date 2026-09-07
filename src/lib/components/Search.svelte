@@ -4,11 +4,10 @@
 	import { fade, fly, scale } from 'svelte/transition';
 	import { Search as SearchIcon, X } from '@lucide/svelte';
 	import {
-		buildSearchExcerpt,
-		normalizeResultUrl,
-		type Pagefind,
-		type SearchResultView,
-	} from '$lib/search.js';
+        buildSearchGroups,
+        type Pagefind,
+        type SearchResultGroup,
+    } from '$lib/search.js';
 
 	function focusOnMount(node: HTMLElement) {
 		if (window.matchMedia('(max-width: 640px)').matches) return;
@@ -16,7 +15,7 @@
 	}
 
 	let query = $state('');
-	let results = $state<SearchResultView[]>([]);
+	let results = $state<SearchResultGroup[]>([]);
 	let loading = $state(false);
 	let pagefind = $state<Pagefind | null>(null);
 	let pagefindReady = $state(dev);
@@ -94,17 +93,11 @@
 			return;
 		}
 
-		const data = await Promise.all(response.results.slice(0, 8).map((r) => r.data()));
-		results = data.map((item) => {
-			const excerpt = buildSearchExcerpt(item, query);
-			const result: SearchResultView = {
-				url: normalizeResultUrl(item.url),
-				title: item.meta.title ?? 'Post',
-			};
+		const groupPromises = response.results.slice(0, 8).map((r) => buildSearchGroups(r, query));
+		const groups = await Promise.all(groupPromises);
+		results = groups.filter((g): g is SearchResultGroup => g !== null);
 
-			if (excerpt !== undefined) result.excerpt = excerpt;
-			return result;
-		});
+
 		loading = false;
 	}
 
@@ -193,19 +186,23 @@
 			{#if results.length > 0}
 				<ul class="search-results" role="listbox" aria-label="Search results">
 					{#each results as result (result.url)}
-						<li role="option" aria-selected="false" transition:fly={{ ...searchMotion, y: 8 }}>
-							<a
-								href={result.url}
-								class="search-result"
-								onclick={() => {
-									open = false;
-								}}
-							>
-								<span class="result-title">{result.title}</span>
-								{#if result.excerpt}
-									<span class="result-excerpt">{@html result.excerpt}</span>
-								{/if}
-							</a>
+						<li class="search-result-group" role="option" aria-selected="false" transition:fly={{ ...searchMotion, y: 8 }}>
+							<span class="result-title">{result.title}</span>
+							<ul class="search-matches">
+								{#each result.matches as match, i (i)}
+									<li>
+										<a
+											href={match.fragmentUrl}
+											class="search-match-link" data-sveltekit-reload
+											onclick={() => {
+												open = false;
+											}}
+										>
+											<span class="result-excerpt">{@html match.excerpt}</span>
+										</a>
+									</li>
+								{/each}
+							</ul>
 						</li>
 					{/each}
 				</ul>
@@ -348,6 +345,39 @@
 		font-size: var(--text-sm);
 		color: var(--color-text-tertiary);
 	}
+	.search-result-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		padding: 0.5rem;
+	}
+	.result-title {
+		display: block;
+		font-size: var(--text-sm);
+		font-weight: 500;
+		color: var(--color-text-primary);
+		padding: 0 0.5rem;
+		margin-bottom: 0.25rem;
+	}
+	.search-matches {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+	.search-match-link {
+		display: block;
+		text-decoration: none;
+		color: inherit;
+		padding: 0.5rem;
+		border-radius: var(--radius-md);
+		transition: background-color var(--duration-fast) var(--ease-base);
+	}
+	.search-match-link:hover {
+		background-color: var(--color-surface-hover);
+	}
 	.search-results {
 		list-style: none;
 		margin: 0;
@@ -356,17 +386,7 @@
 		overflow-y: auto;
 		overscroll-behavior: contain;
 	}
-	.search-result {
-		display: block;
-		text-decoration: none;
-		color: inherit;
-		padding: 0.625rem 0.75rem;
-		border-radius: var(--radius-md);
-		transition: background-color var(--duration-fast) var(--ease-base);
-	}
-	.search-result:hover {
-		background-color: var(--color-surface-hover);
-	}
+
 	.result-title {
 		display: block;
 		font-size: var(--text-sm);
