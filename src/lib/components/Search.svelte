@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { fade, fly, scale } from 'svelte/transition';
-	import { Search as SearchIcon, X } from '@lucide/svelte';
+	import { fade, fly, scale, slide } from 'svelte/transition';
+	import { Search as SearchIcon, X, ChevronDown } from '@lucide/svelte';
 	import {
         buildSearchGroups,
         type Pagefind,
@@ -204,10 +204,13 @@
                                 aria-expanded={openAccordionUrl === result.url}
                             >
                                 <span class="result-title">{result.title}</span>
-                                <span class="result-badge">{result.matches.length} {result.matches.length === 1 ? 'match' : 'matches'}</span>
+                                <span class="result-badge">
+                                    <ChevronDown size={14} class="chevron {openAccordionUrl === result.url ? 'open' : ''}" />
+                                    {result.matches.length}
+                                </span>
                             </button>
                             {#if openAccordionUrl === result.url}
-                                <ul class="search-matches" transition:fly={{ ...searchMotion, y: -4 }}>
+                                <ul class="search-matches" transition:slide={{ duration: reducedMotion ? 1 : 200, easing: (t) => 1 - Math.pow(1 - t, 3) }}>
                                     {#each result.matches as match, i (i)}
                                         <li>
                                             <a
@@ -402,6 +405,15 @@
         border-radius: var(--radius-full);
         color: var(--color-text-secondary);
         white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    :global(.chevron) {
+        transition: transform var(--duration-fast) var(--ease-base);
+    }
+    :global(.chevron.open) {
+        transform: rotate(180deg);
     }
 	.search-matches {
 		list-style: none;
