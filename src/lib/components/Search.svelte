@@ -1,14 +1,13 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { fade, fly, scale } from 'svelte/transition';
-	import { Search as SearchIcon, X } from '@lucide/svelte';
+	import { fade, fly, scale, slide } from 'svelte/transition';
+	import { Search as SearchIcon, X, ChevronDown } from '@lucide/svelte';
 	import {
-		buildSearchExcerpt,
-		normalizeResultUrl,
-		type Pagefind,
-		type SearchResultView,
-	} from '$lib/search.js';
+        buildSearchGroups,
+        type Pagefind,
+        type SearchResultGroup,
+    } from '$lib/search.js';
 
 	function focusOnMount(node: HTMLElement) {
 		if (window.matchMedia('(max-width: 640px)').matches) return;
@@ -16,12 +15,13 @@
 	}
 
 	let query = $state('');
-	let results = $state<SearchResultView[]>([]);
+	let results = $state<SearchResultGroup[]>([]);
 	let loading = $state(false);
 	let pagefind = $state<Pagefind | null>(null);
 	let pagefindReady = $state(dev);
 	let pagefindLoadPromise: Promise<Pagefind | null> | null = null;
 	let open = $state(false);
+	let openAccordionUrl = $state<string | null>(null);
 	let reducedMotion = $state(false);
 
 	const searchMotion = $derived({
@@ -94,17 +94,11 @@
 			return;
 		}
 
-		const data = await Promise.all(response.results.slice(0, 8).map((r) => r.data()));
-		results = data.map((item) => {
-			const excerpt = buildSearchExcerpt(item, query);
-			const result: SearchResultView = {
-				url: normalizeResultUrl(item.url),
-				title: item.meta.title ?? 'Post',
-			};
+		const groupPromises = response.results.slice(0, 8).map((r) => buildSearchGroups(r, query));
+		const groups = await Promise.all(groupPromises);
+		results = groups.filter((g): g is SearchResultGroup => g !== null);
 
-			if (excerpt !== undefined) result.excerpt = excerpt;
-			return result;
-		});
+
 		loading = false;
 	}
 
@@ -113,17 +107,26 @@
 			open = false;
 			query = '';
 			results = [];
+			openAccordionUrl = null;
 		}
 		if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
 			e.preventDefault();
 			open = !open;
-			if (open) void loadPagefind();
+		if (open) {
+			void loadPagefind();
+		} else {
+			openAccordionUrl = null;
+		}
 		}
 	}
 
 	function toggleSearch() {
 		open = !open;
-		if (open) void loadPagefind();
+		if (open) {
+			void loadPagefind();
+		} else {
+			openAccordionUrl = null;
+		}
 	}
 </script>
 
@@ -191,21 +194,39 @@
 				</button>
 			</div>
 			{#if results.length > 0}
+
 				<ul class="search-results" role="listbox" aria-label="Search results">
 					{#each results as result (result.url)}
-						<li role="option" aria-selected="false" transition:fly={{ ...searchMotion, y: 8 }}>
-							<a
-								href={result.url}
-								class="search-result"
-								onclick={() => {
-									open = false;
-								}}
-							>
-								<span class="result-title">{result.title}</span>
-								{#if result.excerpt}
-									<span class="result-excerpt">{@html result.excerpt}</span>
-								{/if}
-							</a>
+						<li class="search-result-group" role="option" aria-selected="false" transition:fly={{ ...searchMotion, y: 8 }}>
+							<button
+                                class="result-title-btn"
+                                onclick={() => openAccordionUrl = openAccordionUrl === result.url ? null : result.url}
+                                aria-expanded={openAccordionUrl === result.url}
+                            >
+                                <span class="result-title">{result.title}</span>
+                                <span class="result-badge">
+                                    <ChevronDown size={14} class="chevron {openAccordionUrl === result.url ? 'open' : ''}" />
+                                    {result.matches.length}
+                                </span>
+                            </button>
+                            {#if openAccordionUrl === result.url}
+                                <ul class="search-matches" transition:slide={{ duration: reducedMotion ? 1 : 200, easing: (t) => 1 - Math.pow(1 - t, 3) }}>
+                                    {#each result.matches as match, i (i)}
+                                        <li>
+                                            <a
+                                                href={match.fragmentUrl}
+                                                class="search-match-link" data-sveltekit-reload
+                                                onclick={() => {
+                                                    open = false;
+                                                    openAccordionUrl = null;
+                                                }}
+                                            >
+                                                <span class="result-excerpt">{@html match.excerpt}</span>
+                                            </a>
+                                        </li>
+                                    {/each}
+                                </ul>
+                            {/if}
 						</li>
 					{/each}
 				</ul>
@@ -348,6 +369,71 @@
 		font-size: var(--text-sm);
 		color: var(--color-text-tertiary);
 	}
+	.search-result-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		padding: 0.5rem;
+	}
+	.result-title-btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0.5rem 0.5rem;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        border-radius: var(--radius-md);
+        transition: background-color var(--duration-fast) var(--ease-base);
+    }
+    .result-title-btn:hover {
+        background-color: var(--color-surface-hover);
+    }
+	.result-title {
+		display: block;
+		font-size: var(--text-sm);
+		font-weight: 500;
+		color: var(--color-text-primary);
+        text-align: left;
+	}
+    .result-badge {
+        font-size: var(--text-xs);
+        padding: 0.125rem 0.375rem;
+        background: none;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-full);
+        color: var(--color-text-secondary);
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    :global(.chevron) {
+        transition: transform var(--duration-fast) var(--ease-base);
+    }
+    :global(.chevron.open) {
+        transform: rotate(180deg);
+    }
+	.search-matches {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+	.search-match-link {
+		display: block;
+		text-decoration: none;
+		color: inherit;
+		padding: 0.5rem;
+		border-radius: var(--radius-md);
+		transition: background-color var(--duration-fast) var(--ease-base);
+	}
+	.search-match-link:hover {
+		background-color: var(--color-surface-hover);
+	}
 	.search-results {
 		list-style: none;
 		margin: 0;
@@ -356,17 +442,7 @@
 		overflow-y: auto;
 		overscroll-behavior: contain;
 	}
-	.search-result {
-		display: block;
-		text-decoration: none;
-		color: inherit;
-		padding: 0.625rem 0.75rem;
-		border-radius: var(--radius-md);
-		transition: background-color var(--duration-fast) var(--ease-base);
-	}
-	.search-result:hover {
-		background-color: var(--color-surface-hover);
-	}
+
 	.result-title {
 		display: block;
 		font-size: var(--text-sm);

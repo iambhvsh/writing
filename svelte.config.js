@@ -54,7 +54,7 @@ const mdsvexOptions = {
 	highlight: {
 		highlighter: async (code, lang = 'text') => {
 			const html = escapeSvelte(highlighter.codeToHtml(code, { lang, theme }));
-			return `{@html \`${html}\`}`;
+			return `{@html ${JSON.stringify(html)}}`;
 		}
 	},
 	remarkPlugins: sharedRemarkPlugins,
