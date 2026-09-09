@@ -94,43 +94,62 @@ export async function buildSearchGroups(result: PagefindResult, query: string): 
 	const regex = new RegExp(escapeRegExp(phrase), 'gi');
 
 	const matches: SearchMatch[] = [];
+	const rawMatches: { start: number; end: number }[] = [];
 	let match;
-	const maxMatches = 5;
 
-	while ((match = regex.exec(searchable)) !== null && matches.length < maxMatches) {
-		const start = match.index;
-		const end = start + phrase.length;
-
-        // Try to capture context
-        let excerptStart = Math.max(0, start - 40);
-        const spaceBefore = searchable.lastIndexOf(' ', excerptStart);
-        if (spaceBefore !== -1) {
-            excerptStart = spaceBefore + 1;
-        }
-
-        let excerptEnd = Math.min(searchable.length, end + 40);
-        const spaceAfter = searchable.indexOf(' ', excerptEnd);
-        if (spaceAfter !== -1) {
-            excerptEnd = spaceAfter;
-        }
-
-		const prefix = excerptStart > 0 ? '...' : '';
-		const suffix = excerptEnd < searchable.length ? '...' : '';
-
-		let snippet = `${prefix}${searchable.slice(excerptStart, excerptEnd)}${suffix}`;
-		snippet = escapeHtml(snippet).replace(
-			new RegExp(escapeRegExp(phrase), 'gi'),
-			(m) => `<mark>${m}</mark>`
-		);
-
-		const encodeFragment = encodeURIComponent(phrase);
-		matches.push({
-			excerpt: snippet,
-			fragmentUrl: `${url}#:~:text=${encodeFragment}`
-		});
+	// Gather all matches
+	while ((match = regex.exec(searchable)) !== null) {
+		rawMatches.push({ start: match.index, end: match.index + phrase.length });
 	}
 
-	if (matches.length > 0) {
+	if (rawMatches.length > 0) {
+		// Group nearby matches to avoid duplicate snippets
+		const groupedMatches: { start: number; end: number; matchCoords: {start: number, end: number}[] }[] = [];
+		const contextRadius = 40;
+
+		for (const m of rawMatches) {
+			let excerptStart = Math.max(0, m.start - contextRadius);
+			const spaceBefore = searchable.lastIndexOf(' ', excerptStart);
+			if (spaceBefore !== -1) excerptStart = spaceBefore + 1;
+
+			let excerptEnd = Math.min(searchable.length, m.end + contextRadius);
+			const spaceAfter = searchable.indexOf(' ', excerptEnd);
+			if (spaceAfter !== -1) excerptEnd = spaceAfter;
+
+			const lastGroup = groupedMatches.length > 0 ? groupedMatches[groupedMatches.length - 1] : null;
+
+			// If this match overlaps with the previous group's excerpt window
+			if (lastGroup && excerptStart <= lastGroup.end) {
+				// Extend the last group
+				lastGroup.end = Math.max(lastGroup.end, excerptEnd);
+				lastGroup.matchCoords.push(m);
+			} else {
+				// Create a new group
+				groupedMatches.push({ start: excerptStart, end: excerptEnd, matchCoords: [m] });
+			}
+		}
+
+		const maxMatches = 5;
+		for (const group of groupedMatches.slice(0, maxMatches)) {
+			const prefix = group.start > 0 ? '...' : '';
+			const suffix = group.end < searchable.length ? '...' : '';
+
+			let snippet = `${prefix}${searchable.slice(group.start, group.end)}${suffix}`;
+
+			// Highlight matches
+			snippet = escapeHtml(snippet).replace(
+				new RegExp(escapeRegExp(phrase), 'gi'),
+				(m) => `<mark>${m}</mark>`
+			);
+
+			const encodeFragment = encodeURIComponent(phrase);
+			matches.push({
+				excerpt: snippet,
+				// Deep link to the first match in this group
+				fragmentUrl: `${url}#:~:text=${encodeFragment}`
+			});
+		}
+
 		return { url, title, matches };
 	}
 
