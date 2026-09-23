@@ -14,7 +14,7 @@
 		buildSeo({ path: '/', seoTitle: 'Bhavesh Patil – Writing', origin: data.origin })
 	);
 
-	const avatarUrl = 'https://db.iambhvsh.in/assets/profile.webp';
+	const avatarUrl = 'https://db.iambhvsh.in/images/profile.webp';
 
 	let visibleCount = $state(siteConfig.postsPerPage ?? 6);
 	const visiblePosts = $derived(data.posts.slice(0, visibleCount));
