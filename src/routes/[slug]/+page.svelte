@@ -23,7 +23,7 @@
 	);
 
 	const PostContent = $derived(data.component as Component);
-	const avatarUrl = 'https://db.iambhvsh.in/assets/profile.webp';
+	const avatarUrl = 'https://db.iambhvsh.in/images/profile.webp';
 </script>
 
 <Seo {seo} />
