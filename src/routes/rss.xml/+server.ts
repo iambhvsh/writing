@@ -2,7 +2,7 @@ import { getAllPosts } from '$lib/content.js';
 import { siteConfig } from '$lib/config.js';
 import { getPostImageUrl } from '$lib/seo.js';
 import { xmlCdata, xmlText } from '$lib/xml.js';
-import { compileMarkdownToHtml } from '$lib/rss-content.js';
+import { compileMarkdownToHtml } from '$lib/feed.js';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import type { RequestHandler } from './$types.js';

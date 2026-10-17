@@ -5,13 +5,17 @@ export const prerender = true;
 
 export const load: PageLoad = async ({ url }) => {
 	const posts = await getAllPosts();
-	const mappedPosts = posts.map(({ slug, title, description, publishedAt, tags, readingTime }) => ({
-		slug,
-		title,
-		description,
-		publishedAt,
-		tags,
-		readingTime,
-	}));
+	const mappedPosts = posts.map(
+		({ slug, title, description, publishedAt, tags, readingTime, cover, coverAlt }) => ({
+			slug,
+			title,
+			description,
+			publishedAt,
+			tags,
+			readingTime,
+			...(cover ? { cover } : {}),
+			...(coverAlt ? { coverAlt } : {})
+		})
+	);
 	return { origin: url.origin, posts: mappedPosts };
 };

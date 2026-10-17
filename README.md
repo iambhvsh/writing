@@ -14,7 +14,7 @@ For the full design and implementation reference, see [DESIGN.md](./DESIGN.md).
 - SVX and Markdown support for posts.
 - Required frontmatter validation for title, description, publish date, tags, and covers.
 - Automatic reading time calculation from raw post content.
-- Automatic Table of Contents generation for every post.
+- Automatic Table of Contents for every post.
 - Syntax highlighting with Shiki.
 - Pagefind-powered search after production builds.
 - SEO metadata generated from post frontmatter and site config.
@@ -23,7 +23,7 @@ For the full design and implementation reference, see [DESIGN.md](./DESIGN.md).
 - Cover image support with automatic `cover.*` detection.
 - RSS feed and sitemap generation.
 - Static output through SvelteKit adapter-static.
-- Light and dark themes with persisted preference.
+- Light and dark themes.
 - Accessible landmarks, skip link, icon labels, focus states, and reduced-motion handling.
 - Vercel deployment config with security headers.
 

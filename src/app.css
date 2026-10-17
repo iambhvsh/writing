@@ -44,8 +44,16 @@
 	--color-accent: #0f0f0e;
 	--color-accent-hover: #6b6b67;
 
-	--color-code-bg: #161614;
-	--color-code-text: #e8e5e0;
+	--color-code-bg: #ffffff;
+	--color-code-text: #24292e;
+	--color-code-btn-bg: rgba(0, 0, 0, 0.04);
+	--color-code-btn-bg-hover: rgba(0, 0, 0, 0.08);
+	--color-code-btn-border: rgba(0, 0, 0, 0.08);
+	--color-code-btn-text: #555552;
+	--color-code-btn-text-hover: #0f0f0e;
+	--color-code-btn-copied: #16a34a;
+	--color-code-scrollbar: rgba(0, 0, 0, 0.18);
+	--color-code-scrollbar-hover: rgba(0, 0, 0, 0.32);
 
 	--shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.03);
 	--shadow-hover: 0 3px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
@@ -105,10 +113,19 @@
 	--color-text-inverse: #f5f4f0;
 	--color-accent: #0f0f0e;
 	--color-accent-hover: #6b6b67;
-	--color-code-bg: #161614;
-	--color-code-text: #e8e5e0;
+	--color-code-bg: #ffffff;
+	--color-code-text: #24292e;
+	--color-code-btn-bg: rgba(0, 0, 0, 0.04);
+	--color-code-btn-bg-hover: rgba(0, 0, 0, 0.08);
+	--color-code-btn-border: rgba(0, 0, 0, 0.08);
+	--color-code-btn-text: #555552;
+	--color-code-btn-text-hover: #0f0f0e;
+	--color-code-btn-copied: #16a34a;
+	--color-code-scrollbar: rgba(0, 0, 0, 0.18);
+	--color-code-scrollbar-hover: rgba(0, 0, 0, 0.32);
 	--shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.03);
 	--shadow-hover: 0 3px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+	color-scheme: light;
 }
 
 [data-theme='dark'] {
@@ -128,8 +145,17 @@
 
 	--color-code-bg: #0c0b0a;
 	--color-code-text: #ede8df;
+	--color-code-btn-bg: rgba(255, 255, 255, 0.06);
+	--color-code-btn-bg-hover: rgba(255, 255, 255, 0.1);
+	--color-code-btn-border: rgba(255, 255, 255, 0.08);
+	--color-code-btn-text: #9e9e98;
+	--color-code-btn-text-hover: #ede8df;
+	--color-code-btn-copied: #4ade80;
+	--color-code-scrollbar: rgba(255, 255, 255, 0.18);
+	--color-code-scrollbar-hover: rgba(255, 255, 255, 0.35);
 	--shadow-card: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
 	--shadow-hover: 0 3px 14px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.4);
+	color-scheme: dark;
 }
 
 *,
@@ -149,10 +175,6 @@ html {
 	scroll-behavior: smooth;
 }
 
-[data-theme='dark'] {
-	color-scheme: dark;
-}
-
 body {
 	margin: 0;
 	background-color: transparent;
@@ -169,9 +191,9 @@ body {
 	*,
 	*::before,
 	*::after {
-		animation-duration: 0.01ms !important;
-		animation-iteration-count: 1 !important;
-		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms;
+		animation-iteration-count: 1;
+		transition-duration: 0.01ms;
 	}
 }
 
@@ -187,6 +209,7 @@ body {
 }
 
 .prose {
+	max-width: none;
 	--tw-prose-body: var(--color-text-secondary);
 	--tw-prose-headings: var(--color-text-primary);
 	--tw-prose-links: var(--color-text-primary);
@@ -211,6 +234,7 @@ body {
 	font-family: var(--font-serif);
 	font-weight: 400;
 	letter-spacing: var(--tracking-tight);
+	scroll-margin-top: 5rem;
 }
 
 .prose a {
@@ -231,13 +255,13 @@ body {
 }
 
 .prose h2[id='table-of-contents'] + :is(ul, ol) a {
-	color: #2f2f2b !important;
-	text-decoration-color: rgba(15, 15, 14, 0.18) !important;
+	color: #2f2f2b;
+	text-decoration-color: rgba(15, 15, 14, 0.18);
 }
 
 .prose h2[id='table-of-contents'] + :is(ul, ol) a:hover {
-	color: var(--color-text-primary) !important;
-	text-decoration-color: rgba(15, 15, 14, 0.28) !important;
+	color: var(--color-text-primary);
+	text-decoration-color: rgba(15, 15, 14, 0.28);
 }
 
 [data-theme='dark'] .prose h2[id='table-of-contents'] + :is(ul, ol) {
@@ -245,21 +269,101 @@ body {
 }
 
 [data-theme='dark'] .prose h2[id='table-of-contents'] + :is(ul, ol) a {
-	color: #d2d0ca !important;
-	text-decoration-color: rgba(240, 239, 235, 0.24) !important;
+	color: #d2d0ca;
+	text-decoration-color: rgba(240, 239, 235, 0.24);
 }
 
 [data-theme='dark'] .prose h2[id='table-of-contents'] + :is(ul, ol) a:hover {
-	color: var(--color-text-primary) !important;
-	text-decoration-color: rgba(240, 239, 235, 0.36) !important;
+	color: var(--color-text-primary);
+	text-decoration-color: rgba(240, 239, 235, 0.36);
+}
+
+@media (min-width: 1280px) {
+	.prose h2[id='table-of-contents'],
+	.prose h2[id='table-of-contents'] + :is(ul, ol) {
+		display: none;
+	}
 }
 
 .prose pre {
-	background-color: var(--color-code-bg) !important;
+	background-color: var(--color-code-bg);
 	border-radius: var(--radius-lg);
 	border: 1px solid var(--color-border-strong);
 	overflow-x: auto;
 	position: relative;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+	padding-inline-end: 2.75rem;
+	scrollbar-width: thin;
+	scrollbar-color: var(--color-code-scrollbar) transparent;
+	transition:
+		background-color var(--duration-slow) var(--ease-base),
+		border-color var(--duration-slow) var(--ease-base);
+}
+
+.prose pre::-webkit-scrollbar {
+	height: 4px;
+	width: 4px;
+}
+
+.prose pre::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.prose pre::-webkit-scrollbar-thumb {
+	background: var(--color-code-scrollbar);
+	border-radius: var(--radius-full);
+}
+
+.prose pre::-webkit-scrollbar-thumb:hover {
+	background: var(--color-code-scrollbar-hover);
+}
+
+.code-copy-btn {
+	position: absolute;
+	top: 0.625rem;
+	right: 0.625rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.75rem;
+	height: 1.75rem;
+	padding: 0;
+	background: var(--color-code-btn-bg);
+	border: 1px solid var(--color-code-btn-border);
+	border-radius: var(--radius-sm);
+	color: var(--color-code-btn-text);
+	cursor: pointer;
+	opacity: 0;
+	transition:
+		opacity var(--duration-fast) var(--ease-base),
+		color var(--duration-fast) var(--ease-base),
+		background var(--duration-fast) var(--ease-base),
+		border-color var(--duration-fast) var(--ease-base);
+}
+
+.prose pre:hover .code-copy-btn,
+.code-copy-btn:focus-visible {
+	opacity: 1;
+}
+
+.code-copy-btn:hover {
+	background: var(--color-code-btn-bg-hover);
+	color: var(--color-code-btn-text-hover);
+}
+
+.code-copy-btn.copied {
+	color: var(--color-code-btn-copied);
+	opacity: 1;
+}
+
+@supports not (color: light-dark(#000, #fff)) {
+	[data-theme='dark'] .shiki span {
+		color: var(--shiki-dark, inherit);
+	}
+	[data-theme='light'] .shiki span {
+		color: var(--shiki-light, inherit);
+	}
 }
 
 .prose :not(pre) > code {
@@ -272,10 +376,12 @@ body {
 }
 
 .prose pre code {
-	background: none !important;
-	border: none !important;
-	padding: 0 !important;
+	background: none;
+	border: none;
+	padding: 0;
 	font-size: 0.875em;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
 }
 
 .prose h2 a,

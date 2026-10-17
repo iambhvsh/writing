@@ -114,21 +114,27 @@ Behavior:
 
 ## Layout
 
-Main widths:
+The site uses a symmetrical 3-column editorial layout on desktop screens (`>= 1280px`):
 
-| Area | Width |
-|---|---:|
-| Home container | `48rem` |
-| Post header | `48rem` |
-| Post body | `48rem` |
-| Header inner | `72rem` |
+| Area | Width | Placement |
+|---|---|---|
+| Navbar inner | `1440px` max | Sticky top (`height: 3.5rem`) with GPU progress bar |
+| Left sidebar | `224px` | Fixed (`left: max(1.5rem, calc(50vw - 720px + 1.5rem))`) |
+| Center column | `820px` max | Centered (`margin: 0 auto`) |
+| Right sidebar | `260px` | Fixed (`right: max(1.5rem, calc(50vw - 720px + 1.5rem))`) |
+| Layout container | `1440px` max | `padding-left: calc(224px + 2rem); padding-right: calc(260px + 2rem);` |
 
-Post covers use:
+On smaller screens (`< 1280px`):
+- Left and right fixed sidebars hide cleanly.
+- Main column fills the viewport (`max-width: 820px; margin: 0 auto;`).
+- On the home page, a horizontal scrollable topic chip bar renders under the header.
+- On the post page, heading links remain navigable.
 
-- `aspect-ratio: 16 / 9`
-- `object-fit: cover`
-- `border-radius: 0.875rem`
-- `border: 1px solid var(--color-border)`
+Post covers and thumbnails use:
+
+- Post header cover: `aspect-ratio: 16 / 9`, `object-fit: cover`, `border-radius: 0.875rem`
+- Card thumbnail: `150px` by `100px`, `object-fit: cover`, `border-radius: var(--radius-md)`
+- Border: `1px solid var(--color-border)`
 
 ## Typography
 
@@ -181,8 +187,8 @@ Light theme:
 | `--color-text-inverse` | `#f5f4f0` |
 | `--color-accent` | `#0f0f0e` |
 | `--color-accent-hover` | `#6b6b67` |
-| `--color-code-bg` | `#161614` |
-| `--color-code-text` | `#e8e5e0` |
+| `--color-code-bg` | `#ffffff` |
+| `--color-code-text` | `#24292e` |
 
 Dark theme:
 
@@ -218,38 +224,15 @@ Global reduced-motion handling is defined in `src/app.css`.
 
 ## Components
 
-Header:
-
-- file: `src/lib/components/Header.svelte`
-- sticky top header
-- blurred background layer
-- serif wordmark
-- search button
-- theme toggle
-- theme preference stored in `localStorage`
-
-Home:
-
-- file: `src/routes/+page.svelte`
-- remote avatar image
-- title `Bhavesh Patil – Writing`
-- recent posts list
-
-Post card:
-
-- file: `src/lib/components/PostCard.svelte`
-- title, date, reading time, description, and up to three tags
-- first card receives featured sizing
-
-Post page:
-
-- file: `src/routes/[slug]/+page.svelte`
-- optional cover
-- metadata row
-- title and description
-- tags
-- author row
-- post body rendered through SVX
+- **`Header.svelte`** (`src/lib/components/Header.svelte`): Sticky navbar with blurred backdrop, serif wordmark, search trigger, theme toggle, and reading progress bar (`transform: scaleX`).
+- **`Sidebar.svelte`** (`src/lib/components/Sidebar.svelte`): Unified right sidebar used across both home and article pages; displays Author Profile card, Series Navigation (when applicable), and RSS subscription card.
+- **`Topics.svelte`** (`src/lib/components/Topics.svelte`): Fixed left sidebar navigation for the home page; renders clean, tabular-aligned top 5 topics and "All Writings" filter.
+- **`Toc.svelte`** (`src/lib/components/Toc.svelte`): Fixed left sidebar Table of Contents for post reading; features click-scroll lockout and RAF scroll-spy with zero-latency heading highlights.
+- **`Card.svelte`** (`src/lib/components/Card.svelte`): Post preview card featuring title, date, reading time, full-width description, tags, and cover thumbnail preview.
+- **`Badge.svelte`** (`src/lib/components/Badge.svelte`): Topic / tag badge pill.
+- **`Search.svelte`** (`src/lib/components/Search.svelte`): Command palette and Pagefind client search modal.
+- **`Seo.svelte`** (`src/lib/components/Seo.svelte`): Document `<head>` metadata, Open Graph, Twitter cards, and JSON-LD structured data.
+- **`Footer.svelte`** (`src/lib/components/Footer.svelte`): Copyright, back-to-top, and attribution footer.
 
 ## Accessibility
 

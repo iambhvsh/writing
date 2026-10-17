@@ -16,5 +16,21 @@ export const load: PageLoad = async ({ params, url }) => {
 		error(404, { message: 'Post not found' });
 	}
 
-	return { ...result, origin: url.origin };
+	const allPosts = await getAllPosts();
+	const chronological = [...allPosts].sort(
+		(a, b) => new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime()
+	);
+	const currentIndex = chronological.findIndex((p) => p.slug === params.slug);
+	const prevPost = currentIndex > 0 ? chronological[currentIndex - 1] : null;
+	const nextPost =
+		currentIndex >= 0 && currentIndex < chronological.length - 1
+			? chronological[currentIndex + 1]
+			: null;
+
+	return {
+		...result,
+		origin: url.origin,
+		prevPost: prevPost ? { slug: prevPost.slug, title: prevPost.title } : null,
+		nextPost: nextPost ? { slug: nextPost.slug, title: nextPost.title } : null
+	};
 };

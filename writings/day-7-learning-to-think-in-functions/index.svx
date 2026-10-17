@@ -1,0 +1,438 @@
+---
+title: "Day 7: Learning to Think in Functions"
+description: "After more than three months away from Swift, I'm back with my MacBook Air M5 and learning about functions, parameters, return values, tuples, and parameter labels."
+publishedAt: 2026-10-17
+tags: Swift, Swift Programming, iOS Development, Apple Development, SwiftUI
+---
+
+I'm back.
+
+It's been more than three months since I last continued learning Swift, and honestly, I didn't look back at it during that time.
+
+I had lost motivation. A big reason was that I wasn't sure if I was going to get a Mac of my own in the future. Without knowing that, it was difficult to convince myself to keep going with something I wasn't even sure I'd be able to continue properly.
+
+Eventually, I just stopped.
+
+But now, things are different. I finally got myself a MacBook Air M5, and somehow, that lost spirit is back.
+
+Before jumping straight into the next lesson, I went back and read my own previous writings. It had been so long that I needed to refresh my memory, and honestly, going through those posts helped more than I expected. Things I'd learned earlier started coming back to me, and concepts that felt a little distant became easier to understand again.
+
+It felt good to revisit something I'd written myself and realize that it was actually helping me learn all over again.
+
+Yesterday, I finally completed Day 7 of 100 Days of SwiftUI.
+
+Today's lesson was about functions, parameters, return values, tuples, and parameter labels. It was a little different from the previous lessons because instead of focusing on repeating work or making decisions, I was learning how to organize code into reusable pieces.
+
+## Teaching Swift to Reuse Code
+
+One thing I've started noticing while learning programming is how quickly code can become repetitive.
+
+Imagine writing the same ten lines of code in several different places.
+
+It might work perfectly fine.
+
+But what happens when I need to change something?
+
+I'd have to find every place where I wrote that code and update it individually. And if I missed one, things could start behaving differently.
+
+That's where functions come in.
+
+Instead of repeating the same instructions, I can define them once and use them whenever I need them.
+
+```swift
+func showWelcome() {
+    print("Welcome to my app!")
+    print("Thanks for being here.")
+}
+
+showWelcome()
+```
+
+The `func` keyword tells Swift that I'm creating a function.
+
+The name describes what it does, and the braces contain the instructions that should run when I call it.
+
+One thing worth understanding is that defining a function doesn't automatically execute its code.
+
+I have to call it using its name followed by parentheses.
+
+```swift
+showWelcome()
+```
+
+That distinction is surprisingly important.
+
+I can define what needs to happen first and decide when it should happen later.
+
+It makes the code easier to organize, and I don't have to keep writing the same thing over and over again.
+
+## Giving Functions Some Flexibility
+
+A function that always does exactly the same thing is useful, but what if I want to change its behavior without rewriting it?
+
+That's where parameters become important.
+
+Instead of creating a separate function for every times table, I can let the function accept a number.
+
+```swift
+func printTimesTables(number: Int) {
+    for i in 1...12 {
+        print("\(i) x \(number) is \(i * number)")
+    }
+}
+
+printTimesTables(number: 5)
+printTimesTables(number: 8)
+```
+
+Now the same function works for different numbers.
+
+The `number: Int` part defines a parameter. It tells Swift that the function expects an integer, and I can use the value inside the function just like any other constant.
+
+When I call the function, I provide an actual value, known as an argument.
+
+For example, in `printTimesTables(number: 5)`, the argument is `5`.
+
+The distinction is simple: a parameter is the placeholder, while an argument is the actual value being passed in.
+
+I can also add more than one parameter.
+
+```swift
+func printTimesTables(number: Int, end: Int) {
+    for i in 1...end {
+        print("\(i) x \(number) is \(i * number)")
+    }
+}
+
+printTimesTables(number: 5, end: 20)
+```
+
+This time, I can control both the number whose times table I want and how far it should go.
+
+Something else I learned is that Swift expects arguments to be provided in the same order as the parameters are defined.
+
+Since `number` comes before `end`, I can't simply switch their positions when calling the function.
+
+The labels make it easier to understand what each value represents, even when a function accepts multiple parameters.
+
+## Getting Values Back from Functions
+
+Until now, I'd mostly thought about functions as something that performs an action.
+
+Print something.
+
+Calculate something.
+
+Repeat something.
+
+But functions can also return values that I can use elsewhere in my code.
+
+```swift
+func rollDice() -> Int {
+    return Int.random(in: 1...6)
+}
+
+let result = rollDice()
+print(result)
+```
+
+The output will be a random integer between 1 and 6.
+
+The `-> Int` tells Swift that the function returns an integer.
+
+The `return` keyword sends the calculated value back to the place where the function was called.
+
+Instead of printing the result from inside the function, I can store it in a constant and use it later.
+
+That feels like a much more flexible way of working.
+
+One detail I found interesting is that Swift can sometimes figure out when a value should be returned without explicitly writing `return`.
+
+For example:
+
+```swift
+func square(number: Int) -> Int {
+    number * number
+}
+
+let result = square(number: 5)
+print(result)
+```
+
+The output is:
+
+```text
+25
+```
+
+Because the function contains a single expression, Swift can infer that its result should be returned.
+
+This makes simple functions much cleaner to write.
+
+I also learned that functions don't always need to return a value. In some situations, using `return` by itself lets a function exit early when there's no reason to continue executing its remaining instructions.
+
+The important thing is understanding what a function promises to return and making sure the code fulfils that promise.
+
+## Putting Functions to Work
+
+One example from the lesson that helped me connect everything was checking whether two strings contain the same letters, regardless of their order.
+
+For example, `"abc"` and `"cab"` contain the same letters, even though they are arranged differently.
+
+I can use `sorted()` to arrange the letters alphabetically and then compare the results.
+
+```swift
+func areLettersIdentical(string1: String, string2: String) -> Bool {
+    string1.sorted() == string2.sorted()
+}
+
+print(areLettersIdentical(string1: "abc", string2: "cab"))
+print(areLettersIdentical(string1: "hello", string2: "world"))
+```
+
+The output is:
+
+```text
+true
+false
+```
+
+The function accepts two strings and returns a Boolean value.
+
+It doesn't need to print the answer itself. It simply calculates the result and returns either `true` or `false`.
+
+This is where the earlier concepts started coming together for me.
+
+I'm passing information into a function, using that information to perform an operation, and getting a result back.
+
+It's a simple example, but it shows how much can be done with just a few lines of code.
+
+## Returning More Than One Value
+
+This was probably one of the more interesting concepts from today's lesson.
+
+What happens when a function needs to return multiple related values?
+
+I could use an array.
+
+I could use a dictionary.
+
+But both approaches have limitations depending on what I'm trying to do.
+
+With an array, I'd need to remember which index represents which value. With a dictionary, I'd have to access values using keys and account for the possibility that a key might not exist.
+
+Swift offers another option: tuples.
+
+```swift
+func getUser() -> (firstName: String, lastName: String) {
+    ("Taylor", "Swift")
+}
+
+let user = getUser()
+
+print("Name: \(user.firstName) \(user.lastName)")
+```
+
+Instead of returning a single string, the function returns two strings together as a tuple.
+
+The interesting part is that I can give each value its own name.
+
+That means I can access `user.firstName` and `user.lastName` instead of remembering which value belongs at which index.
+
+Swift already knows the names from the return type, so I don't even need to repeat them inside the tuple returned by the function.
+
+I can also use a tuple without naming its elements.
+
+```swift
+func getUser() -> (String, String) {
+    ("Taylor", "Swift")
+}
+
+let user = getUser()
+
+print(user.0)
+print(user.1)
+```
+
+Here, `.0` accesses the first value and `.1` accesses the second.
+
+It works, but I find the named version much easier to read.
+
+Another useful feature is that I can extract the values directly into separate constants.
+
+```swift
+let (firstName, lastName) = getUser()
+```
+
+And if I only need one of them, I can ignore the other using `_`.
+
+```swift
+let (firstName, _) = getUser()
+```
+
+This is one of those features that makes more sense when I see it in actual code.
+
+I don't need to create a complicated structure just to return two related values.
+
+Sometimes, a tuple is all I need.
+
+## Making Function Calls Read Naturally
+
+The final part of today's lesson was about parameter labels.
+
+I'd already learned how to pass information into functions. Now I was learning that the way I call a function doesn't always have to match the name I use for its parameter inside the function.
+
+Consider this:
+
+```swift
+func printTimesTables(number: Int) {
+    for i in 1...12 {
+        print("\(i) x \(number) is \(i * number)")
+    }
+}
+
+printTimesTables(number: 5)
+```
+
+There's nothing wrong with that code.
+
+But Swift allows me to make the function call read more naturally.
+
+```swift
+func printTimesTables(for number: Int) {
+    for i in 1...12 {
+        print("\(i) x \(number) is \(i * number)")
+    }
+}
+
+printTimesTables(for: 5)
+```
+
+Now the call reads almost like plain English.
+
+Print times tables for five.
+
+The interesting part is that `for` is the external parameter label, while `number` is the name I use inside the function.
+
+I can use one name when calling the function and another when working with the value itself.
+
+Swift also lets me remove the external label entirely using an underscore.
+
+```swift
+func isUppercase(_ string: String) -> Bool {
+    string == string.uppercased()
+}
+
+let result = isUppercase("HELLO")
+print(result)
+```
+
+Without the underscore, I'd need to write `isUppercase(string: "HELLO")`.
+
+With it, the call becomes simpler.
+
+This is used in many places throughout Swift. For example, when adding an item to an array, I can write `append("Swift")` rather than having to provide an extra parameter label.
+
+I like how these small choices can make code easier to read without changing what it actually does.
+
+## Debugging My Own Thinking
+
+One thing I noticed while going through today's checkpoints was that understanding the syntax wasn't always enough.
+
+I could recognize what a function did, but I still needed to understand how its inputs and outputs worked together.
+
+What value is being passed in?
+
+What does the function do with it?
+
+What value comes back?
+
+Which name should I use when calling it?
+
+Those questions helped me approach the code more carefully.
+
+Instead of looking at a function as one big block of instructions, I started breaking it down into smaller parts.
+
+The parameters provide the input.
+
+The function performs its work.
+
+The return value provides the output, when one is needed.
+
+Once I started thinking about functions that way, the different concepts became easier to connect.
+
+It's a similar feeling to what I experienced while learning loops.
+
+Sometimes, the difficult part isn't the syntax.
+
+It's understanding exactly what the code is doing.
+
+## Patterns Are Starting to Appear
+
+Looking back at the previous lessons, I'm beginning to see how the concepts fit together.
+
+Variables store information.
+
+Collections organize related values.
+
+Conditions decide what should happen.
+
+Loops repeat work.
+
+Functions package that work into reusable pieces.
+
+Parameters let functions accept information, and return values let them give information back.
+
+Tuples allow multiple related values to be returned together, while parameter labels make function calls easier to understand.
+
+Every new lesson seems to build on something I learned earlier.
+
+Instead of learning completely separate features, I'm slowly learning how to combine them.
+
+And I think that's when programming starts becoming more interesting.
+
+## Finding My Motivation Again
+
+Coming back to Swift after more than three months felt a little strange.
+
+I hadn't been practising in the background or occasionally checking what I'd missed. I had genuinely stopped learning and hadn't looked back at Swift during that time.
+
+That's why going through my old blog posts helped.
+
+I'd written those posts while learning the concepts for the first time, so revisiting them felt different from simply reading a tutorial again. I could see how I'd understood things back then, and it helped me get back into the same mindset.
+
+It also reminded me why I'd started this journey in the first place.
+
+For a while, I genuinely wasn't sure whether I'd get a Mac of my own. That uncertainty slowly took away my motivation, and eventually, I stopped learning Swift altogether.
+
+Now that I finally have my MacBook Air M5, I feel like I have something to look forward to again.
+
+I'm not suddenly an expert, and there's still a lot I need to learn. But I'm enjoying the process again, and I think that's what matters right now.
+
+Completing Day 7 might not sound like a huge achievement, but after leaving Swift untouched for so long, it feels good to finally be moving forward again.
+
+## Looking Ahead
+
+Today's lesson wasn't just about functions.
+
+It was about learning how to structure code, reuse logic, and make different parts of a program work together.
+
+I'm still early in this journey, and I know there are many concepts I haven't explored yet.
+
+But I'm beginning to understand that writing good code isn't only about making something work.
+
+It's also about making it reusable, understandable, and easy to work with later.
+
+I'm glad I went back and read my old writings instead of simply trying to pick up where I left off. Sometimes, revisiting what I've already learned is exactly what I need to move forward.
+
+After a break of more than three months, I'm finally back.
+
+Seven days completed, a MacBook Air M5 on my desk, and the motivation to keep learning again.
+
+Let's see how far I can go this time.
+
+## Day 7 Code
+
+The complete code from today's learning session is available here:
+
+* [functions.swift](./functions.swift)
